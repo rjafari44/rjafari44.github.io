@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSP Audio Filtering — Radin Jafari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface-2: #f0efe9;
+      --ink: #1c1b18;
+      --ink-2: #5c5a55;
+      --ink-3: #a8a6a0;
+      --accent: #9a3622;
+      --accent-dim: rgba(154,54,34,0.08);
+      --border: #e0deda;
+      --mono: 'DM Mono', monospace;
+      --serif: 'DM Serif Display', serif;
+      --sans: 'DM Sans', sans-serif;
+      --max: 820px;
+      --code-bg: #1a1917;
+      --code-ink: #d4d0c8;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--ink);
+      font-family: var(--sans); font-weight: 300;
+      line-height: 1.7; font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(247,246,242,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand { font-family: var(--mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .nav-back { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+
+    .project-hero { padding: 10rem 3rem 3rem; max-width: var(--max); margin: 0 auto; }
+    .project-category-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; }
+    .project-category-label::before { content: ''; display: inline-block; width: 20px; height: 2px; background: var(--accent); }
+    h1 { font-family: var(--serif); font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 400; line-height: 1.08; margin-bottom: 1.5rem; }
+    .project-meta { display: flex; flex-wrap: wrap; gap: 2rem; padding: 1.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .meta-item label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 0.2rem; }
+    .meta-item span { font-size: 0.88rem; color: var(--ink); }
+
+    .project-body { max-width: var(--max); margin: 0 auto; padding: 0 3rem 6rem; }
+
+    .section-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .section-label::before { content: ''; display: inline-block; width: 14px; height: 1px; background: var(--accent); }
+    h2 { font-family: var(--serif); font-size: 1.65rem; font-weight: 400; margin-bottom: 1rem; margin-top: 0; }
+    h3 { font-family: var(--mono); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin: 2rem 0 0.75rem; }
+    p { font-size: 0.95rem; color: var(--ink-2); margin-bottom: 1.2rem; line-height: 1.78; }
+    ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.5rem; }
+    ul li { font-size: 0.92rem; color: var(--ink-2); padding-left: 1.4rem; position: relative; line-height: 1.65; }
+    ul li::before { content: '—'; position: absolute; left: 0; color: var(--ink-3); font-size: 0.75rem; top: 0.1rem; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+    .tag { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; padding: 0.3rem 0.75rem; border: 1px solid var(--border); color: var(--ink-2); border-radius: 2px; }
+
+    .section-block { margin-top: 3.5rem; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+    .math-block { background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px; padding: 1.2rem 1.6rem; margin: 1.2rem 0 1.5rem; }
+    .math-block p { font-family: var(--mono); font-size: 0.82rem; line-height: 1.9; color: var(--ink); margin: 0; }
+
+    .code-block { background: var(--code-bg); border-radius: 6px; margin: 1.5rem 0 2rem; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .code-filename { font-family: var(--mono); font-size: 0.68rem; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; }
+    .code-lang { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+    .code-block pre { margin: 0; padding: 1.4rem 1.2rem; overflow-x: auto; line-height: 1.65; font-family: var(--mono); font-size: 0.78rem; color: var(--code-ink); }
+    .code-block pre .cm { color: #686660; font-style: italic; }
+    .code-block pre .kw { color: #c5966a; }
+    .code-block pre .fn { color: #8ab5c5; }
+    .code-block pre .num { color: #d19a66; }
+    .code-block pre .str { color: #98b87a; }
+
+    footer { text-align: center; padding: 2.5rem 3rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); letter-spacing: 0.08em; }
+
+    @media (max-width: 760px) {
+      nav { padding: 1rem 1.5rem; }
+      .project-hero, .project-body { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-brand" href="../../index.html">Radin Jafari</a>
+    <a class="nav-back" href="../../index.html#projects">← Back to Projects</a>
+  </nav>
+
+  <div class="project-hero">
+    <p class="project-category-label">Software · Python · DSP</p>
+    <h1>DSP Audio Filtering</h1>
+    <div class="project-meta">
+      <div class="meta-item"><label>Language</label><span>Python</span></div>
+      <div class="meta-item"><label>Domain</label><span>Digital Signal Processing</span></div>
+      <div class="meta-item"><label>Scope</label><span>Solo Project</span></div>
+      <div class="meta-item"><label>Context</label><span>Course Extra Credit</span></div>
+    </div>
+  </div>
+
+  <div class="project-body">
+
+    <div class="tag-row">
+      <span class="tag">Python</span>
+      <span class="tag">DSP</span>
+      <span class="tag">Audio</span>
+      <span class="tag">NumPy</span>
+      <span class="tag">SciPy</span>
+      <span class="tag">Matplotlib</span>
+      <span class="tag">LTI Systems</span>
+      <span class="tag">FIR Filter</span>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="section-block" style="margin-top:1.5rem;">
+      <p class="section-label">Overview</p>
+      <h2>High-frequency noise reduction via moving-average filtering</h2>
+      <p>
+        A Python project demonstrating high-frequency noise reduction in audio signals using a discrete-time LTI moving-average low-pass filter, with analysis in both the time- and frequency-domains. Originally built as extra credit for a course.
+      </p>
+      <p>
+        A clean audio sample is loaded, artificial Gaussian noise is added, and a discrete-time LTI low-pass filter is then applied to recover a cleaner version of the signal. Results are visualized at each stage — clean vs noisy, and clean vs filtered. The audio used was a short recording of my own voice.
+      </p>
+    </div>
+
+    <img src="../../assets/audio-filtering/System-block-diagram.png" alt="LTI Block Diagram" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+
+    <hr class="divider">
+
+    <!-- PROBLEM DEFINITION -->
+    <div class="section-block">
+      <p class="section-label">01 — Problem Definition</p>
+      <h2>Modelling the System</h2>
+      <p>
+        The system models a noisy input signal as the sum of a clean audio signal and additive high-frequency noise. A moving-average filter is then applied via discrete convolution to attenuate the noise.
+      </p>
+      <div class="math-block">
+        <p>x[n] = s[n] + n[n]            &nbsp;&nbsp; (noisy input)</p>
+        <p>h[n] = 1/N,  n = 0, 1, ..., N-1 &nbsp;&nbsp; (filter impulse response)</p>
+        <p>y[n] = x[n] * h[n]            &nbsp;&nbsp; (filtered output via convolution)</p>
+      </div>
+      <p>
+        N is the filter length — it controls how many samples are averaged together. A larger N means stronger high-frequency attenuation but more smoothing of the original signal.
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- IMPLEMENTATION -->
+    <div class="section-block">
+      <p class="section-label">02 — Implementation</p>
+      <h2>Loading, Filtering & Analysis</h2>
+
+      <h3>Loading & Preprocessing</h3>
+      <p>
+        The audio file is read into a NumPy array using <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">soundfile</code>. Since some recordings are stereo, the script checks the number of dimensions and averages both channels down to mono if needed.
+      </p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">dsp_filter.py</span>
+          <span class="code-lang">Python</span>
+        </div>
+        <pre>signal_clean, sample_rate = sf.<span class="fn">read</span>(audio_file)
+
+<span class="cm"># convert stereo to mono if needed</span>
+<span class="kw">if</span> signal_clean.ndim == <span class="num">2</span>:
+    signal_clean = signal_clean.<span class="fn">mean</span>(axis=<span class="num">1</span>)</pre>
+      </div>
+
+      <h3>Adding Noise</h3>
+      <p>
+        Gaussian noise is generated with <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">np.random.randn</code> and scaled by a noise amplitude constant. The noisy signal is clipped to [-1, 1] to prevent distortion when saving as a <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">.wav</code> file.
+      </p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">dsp_filter.py</span>
+          <span class="code-lang">Python</span>
+        </div>
+        <pre>noise_amp = <span class="num">0.05</span>
+noise = noise_amp * np.random.<span class="fn">randn</span>(<span class="fn">len</span>(signal_clean))
+
+signal_noisy = signal_clean + noise
+signal_noisy = np.<span class="fn">clip</span>(signal_noisy, -<span class="num">1.0</span>, <span class="num">1.0</span>)</pre>
+      </div>
+
+      <h3>Applying the Filter</h3>
+      <p>
+        The moving-average filter is constructed as an impulse response array of length N, then applied via <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">np.convolve</code> with <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">mode='same'</code> to preserve the original signal length.
+      </p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">dsp_filter.py</span>
+          <span class="code-lang">Python</span>
+        </div>
+        <pre>N = <span class="num">5</span>
+h = np.<span class="fn">ones</span>(N) / N   <span class="cm"># impulse response: h[n] = 1/N</span>
+
+signal_filtered = np.<span class="fn">convolve</span>(signal_noisy, h, mode=<span class="str">'same'</span>)
+signal_filtered = np.<span class="fn">clip</span>(signal_filtered, -<span class="num">1.0</span>, <span class="num">1.0</span>)</pre>
+      </div>
+
+      <h3>Frequency-Domain Analysis</h3>
+      <p>
+        FFTs are computed for all three signals using <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">np.fft.fft</code>. Magnitudes are converted to decibels — the linear scale made the clean and noisy spectra look nearly identical, so the logarithmic scale was necessary to reveal actual differences.
+      </p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">dsp_filter.py</span>
+          <span class="code-lang">Python</span>
+        </div>
+        <pre>fft_clean    = np.fft.<span class="fn">fft</span>(signal_clean)
+fft_noisy    = np.fft.<span class="fn">fft</span>(signal_noisy)
+fft_filtered = np.fft.<span class="fn">fft</span>(signal_filtered)
+
+freqs = np.fft.<span class="fn">fftfreq</span>(<span class="fn">len</span>(signal_noisy), <span class="num">1</span> / sample_rate)
+
+<span class="cm"># plot magnitude in dB (log scale)</span>
+<span class="num">20</span> * np.<span class="fn">log10</span>(np.<span class="fn">abs</span>(fft_noisy)[:<span class="fn">len</span>(freqs)//<span class="num">2</span>] + <span class="num">1e-12</span>)</pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- RESULTS -->
+    <div class="section-block">
+      <p class="section-label">03 — Results</p>
+      <h2>Time & Frequency Domain Analysis</h2>
+
+      <h3>Time-Domain — Clean vs Noisy</h3>
+      <p>
+        The noisy signal retains the same overall waveform shape as the clean signal, but shows a noticeably increased amplitude spread across all samples due to the added Gaussian noise.
+      </p>
+      <img src="../../assets/audio-filtering/time-domain-clean-vs-noisy.png" alt="Time-domain: clean vs noisy" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+
+      <h3>Time-Domain — Clean vs Filtered</h3>
+      <p>
+        After filtering, the amplitude spread is significantly reduced compared to the noisy signal, though it does not fully return to the clean signal's amplitude — a trade-off of the moving-average approach.
+      </p>
+      <img src="../../assets/audio-filtering/time-domain-clean-vs-filtered.png" alt="Time-domain: clean vs filtered" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+
+      <h3>Frequency-Domain — Clean vs Noisy</h3>
+      <p>
+        On a logarithmic scale, the noisy signal shows a larger spread of magnitudes and an elevated noise floor that persists across higher frequencies.
+      </p>
+      <img src="../../assets/audio-filtering/frequency-domain-clean-vs-noisy.png" alt="Frequency-domain: clean vs noisy" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+
+      <h3>Frequency-Domain — Clean vs Filtered</h3>
+      <p>
+        The filtered signal's magnitude range closely matches the clean signal, but introduces periodic nulls caused by the zeros of the moving-average filter's frequency response — a known characteristic of this filter type.
+      </p>
+      <img src="../../assets/audio-filtering/frequency-domain-clean-vs-filtered.png" alt="Frequency-domain: clean vs filtered" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+    </div>
+
+    <hr class="divider">
+
+    <!-- REFLECTION -->
+    <div class="section-block">
+      <p class="section-label">04 — Reflection</p>
+      <h2>What I Learned</h2>
+      <p>
+        The most interesting result was the spectral nulls introduced by the moving-average filter. Going in, I expected cleaner output to simply mean a flatter noise floor — seeing the periodic cancellation pattern in the frequency domain made the theoretical behavior of FIR filter zeros concrete in a way that reading about it hadn't.
+      </p>
+      <p>
+        I also learned that linear frequency-domain plots were essentially useless for this analysis — the differences only became visible after switching to a logarithmic (dB) scale. That was a practical lesson in choosing the right representation for the data you're trying to inspect.
+      </p>
+      <p>
+        If I extended this project, I'd experiment with a proper windowed FIR filter (e.g. a Hamming-windowed sinc) to get a sharper frequency cutoff without the spectral nulls, and add a parameter sweep to visualize how filter length N affects the trade-off between noise reduction and signal preservation.
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- SOURCE -->
+    <div class="section-block">
+      <p class="section-label">Source</p>
+      <h2>View on GitHub</h2>
+      <a href="https://github.com/rjafari44/DSP-Audio-filtering" target="_blank" style="display:inline-flex;align-items:center;gap:0.6rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink);text-decoration:none;border:1px solid var(--border);padding:0.75rem 1.25rem;border-radius:3px;transition:border-color 0.2s,color 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 0 1 3.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.652.242 2.873.118 3.176.77.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/rjafari44/DSP-Audio-Filtering
+      </a>
+    </div>
+
+  </div><!-- /project-body -->
+
+  <footer>© 2026 Radin Jafari</footer>
+
+</body>
+</html>

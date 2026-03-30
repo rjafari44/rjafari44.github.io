@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Epione Robot Arm — Radin Jafari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface-2: #f0efe9;
+      --ink: #1c1b18;
+      --ink-2: #5c5a55;
+      --ink-3: #a8a6a0;
+      --accent: #9a3622;
+      --accent-dim: rgba(154,54,34,0.08);
+      --border: #e0deda;
+      --mono: 'DM Mono', monospace;
+      --serif: 'DM Serif Display', serif;
+      --sans: 'DM Sans', sans-serif;
+      --max: 820px;
+      --code-bg: #1a1917;
+      --code-ink: #d4d0c8;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(247,246,242,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      font-family: var(--mono); font-size: 0.75rem;
+      font-weight: 500; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--ink); text-decoration: none;
+    }
+    .nav-back {
+      font-family: var(--mono); font-size: 0.72rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-2); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--accent); }
+
+    /* ---- HERO ---- */
+    .project-hero {
+      padding: 10rem 3rem 3rem;
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .project-category-label {
+      font-family: var(--mono); font-size: 0.68rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .project-category-label::before {
+      content: ''; display: inline-block;
+      width: 20px; height: 2px; background: var(--accent);
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 400; line-height: 1.08; margin-bottom: 1.5rem;
+    }
+    .project-meta {
+      display: flex; flex-wrap: wrap; gap: 2rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .meta-item label {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--ink-3); display: block; margin-bottom: 0.2rem;
+    }
+    .meta-item span { font-size: 0.88rem; color: var(--ink); }
+
+    /* ---- BODY ---- */
+    .project-body {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 3rem 6rem;
+    }
+
+    /* Section headings */
+    .section-label {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-label::before {
+      content: ''; display: inline-block;
+      width: 14px; height: 1px; background: var(--accent);
+    }
+    h2 {
+      font-family: var(--serif); font-size: 1.65rem;
+      font-weight: 400; margin-bottom: 1rem; margin-top: 0;
+    }
+    h3 {
+      font-family: var(--mono); font-size: 0.78rem;
+      font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink);
+      margin: 2rem 0 0.75rem;
+    }
+    p {
+      font-size: 0.95rem; color: var(--ink-2);
+      margin-bottom: 1.2rem; line-height: 1.78;
+    }
+    ul {
+      list-style: none; display: flex;
+      flex-direction: column; gap: 0.45rem;
+      margin-bottom: 1.5rem;
+    }
+    ul li {
+      font-size: 0.92rem; color: var(--ink-2);
+      padding-left: 1.4rem; position: relative; line-height: 1.65;
+    }
+    ul li::before {
+      content: '—'; position: absolute; left: 0;
+      color: var(--ink-3); font-size: 0.75rem; top: 0.1rem;
+    }
+
+    /* ---- TAGS ---- */
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+    .tag {
+      font-family: var(--mono); font-size: 0.65rem;
+      letter-spacing: 0.08em; padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border); color: var(--ink-2);
+      border-radius: 2px;
+    }
+
+    /* ---- SECTION DIVIDER ---- */
+    .section-block { margin-top: 3.5rem; }
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ---- IMAGE / VIDEO SLOTS ---- */
+    .media-slot {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+    .media-slot img,
+    .media-slot video,
+    .media-slot iframe {
+      width: 100%; display: block;
+    }
+    .media-slot video { max-height: 480px; background: #000; }
+
+    .media-placeholder {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 320px; gap: 0.75rem;
+      background: var(--surface-2);
+      border: 1.5px dashed var(--border);
+      border-radius: 4px;
+    }
+    .media-placeholder .ph-icon {
+      font-size: 2rem; opacity: 0.35;
+    }
+    .media-placeholder .ph-label {
+      font-family: var(--mono); font-size: 0.68rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    .media-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.2rem; margin: 2rem 0;
+    }
+
+    /* ---- SCHEMATIC CALLOUT ---- */
+    .callout {
+      background: var(--accent-dim);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.4rem;
+      border-radius: 0 4px 4px 0;
+      margin: 1.5rem 0 2rem;
+      font-size: 0.88rem; color: var(--ink-2);
+      line-height: 1.65;
+    }
+    .callout strong { color: var(--ink); font-weight: 500; }
+
+    /* ---- TABLE ---- */
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0 2rem; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem; font-family: var(--mono);
+    }
+    thead tr {
+      border-bottom: 2px solid var(--ink);
+    }
+    thead th {
+      text-align: left; padding: 0.5rem 0.75rem;
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-2); font-weight: 500;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 0.55rem 0.75rem; color: var(--ink-2); }
+    tbody td:first-child { color: var(--ink); font-weight: 500; }
+    .badge {
+      display: inline-block; padding: 0.15rem 0.55rem;
+      border-radius: 2px; font-size: 0.65rem;
+      letter-spacing: 0.06em; background: var(--accent-dim);
+      color: var(--accent); border: 1px solid rgba(154,54,34,0.2);
+    }
+
+    /* ---- CODE BLOCKS ---- */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: 6px;
+      margin: 1.5rem 0 2rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .code-filename {
+      font-family: var(--mono); font-size: 0.68rem;
+      color: rgba(255,255,255,0.45); letter-spacing: 0.08em;
+    }
+    .code-lang {
+      font-family: var(--mono); font-size: 0.62rem;
+      color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .code-block pre {
+      margin: 0; padding: 1.4rem 1.2rem;
+      overflow-x: auto; line-height: 1.65;
+      font-family: var(--mono); font-size: 0.78rem;
+      color: var(--code-ink);
+    }
+    .code-block pre .cm { color: #686660; font-style: italic; }
+    .code-block pre .kw { color: #c5966a; }
+    .code-block pre .fn { color: #8ab5c5; }
+    .code-block pre .str { color: #98b87a; }
+    .code-block pre .num { color: #d19a66; }
+    .code-block pre .tp { color: #c5a96a; }
+    .code-block pre .pp { color: #9a7fc5; }
+
+    /* ---- TEAM TABLE ---- */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+    .team-card {
+      background: var(--surface);
+      padding: 1.2rem 1.4rem;
+    }
+    .team-card .tc-role {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-3); margin-bottom: 0.3rem;
+    }
+    .team-card .tc-name {
+      font-size: 0.92rem; color: var(--ink); margin-bottom: 0.5rem;
+      font-weight: 400;
+    }
+    .team-card a {
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--accent); text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .team-card a:hover { text-decoration: underline; }
+
+    /* ---- PRINT SETTINGS GRID ---- */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1.5rem 0 2rem;
+    }
+    .spec-cell {
+      background: var(--surface);
+      padding: 1rem 1.2rem;
+    }
+    .spec-cell .sc-key {
+      font-family: var(--mono); font-size: 0.6rem;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink-3); margin-bottom: 0.25rem;
+    }
+    .spec-cell .sc-val {
+      font-size: 0.88rem; color: var(--ink);
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      text-align: center; padding: 2.5rem 3rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.68rem;
+      color: var(--ink-3); letter-spacing: 0.08em;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 760px) {
+      nav { padding: 1rem 1.5rem; }
+      .project-hero, .project-body { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .media-grid { grid-template-columns: 1fr; }
+      .specs-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-brand" href="../../index.html">Radin Jafari</a>
+    <a class="nav-back" href="../../index.html#projects">← Back to Projects</a>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <div class="project-hero">
+    <p class="project-category-label">Robotics · Embedded Systems · Computer Vision</p>
+    <h1>Epione<br><span style="font-style:italic;color:var(--accent)">Arctos Robot Arm</span></h1>
+    <div class="project-meta">
+      <div class="meta-item"><label>Platform</label><span>Arctos (Open Source)</span></div>
+      <div class="meta-item"><label>Type</label><span>6-DOF Desktop Robotic Arm</span></div>
+      <div class="meta-item"><label>Control</label><span>Manual · Vision-Based Gesture</span></div>
+      <div class="meta-item"><label>scope</label><span>Collaborative University Project</span></div>
+    </div>
+  </div>
+
+  <!-- ======== BODY ======== -->
+  <div class="project-body">
+
+    <div class="tag-row">
+      <span class="tag">C++ / Arduino</span>
+      <span class="tag">Python</span>
+      <span class="tag">MediaPipe</span>
+      <span class="tag">OpenCV</span>
+      <span class="tag">AccelStepper</span>
+      <span class="tag">TMC2209</span>
+      <span class="tag">Stepper Control</span>
+      <span class="tag">Servo Control</span>
+      <span class="tag">Computer Vision</span>
+      <span class="tag">Gesture Recognition</span>
+      <span class="tag">Embedded Systems</span>
+      <span class="tag">Open Source Hardware</span>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="section-block">
+      <p class="section-label">Overview</p>
+      <h2>A 6-DOF arm with dual-mode control</h2>
+      <p>
+        Epione is a 6-degree-of-freedom desktop robotic arm built on the open-source <strong>Arctos</strong> platform — a community-designed arm known for its printable structure and accessible electronics. The project extends the base platform with a custom end effector, a fully hand-wired electrical architecture, and two independent software control modes: a joystick-driven manual mode for precise positioning, and a vision-based gesture control system using MediaPipe hand tracking.
+      </p>
+      <p>
+        The name Epione comes from Greek mythology — the goddess of the soothing of pain, consort of Asclepius which fits the mission of creating something for the concept of helping people. Built and integrated from the ground up as a collaborative university project.
+      </p>
+    </div>
+
+    <!-- ROBOT IMAGE -->
+    <img src="../../assets/epione/epione-robot-arm.jpg" alt="Epione Robot Arm image" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+
+    <hr class="divider">
+
+    <!-- MECHANICAL -->
+    <div class="section-block">
+      <p class="section-label">01 — Mechanical</p>
+      <h2>Structure & End Effector</h2>
+      <p>
+        All structural components were 3D printed in PLA+ with settings tuned for both rigidity and print reliability. Assembly was more involved than anticipated — provided instructions had gaps and skipped steps, so the CAD STEP file and video references were used extensively throughout. Cover plates were intentionally omitted to maintain continuous access to wiring during development and troubleshooting. Lubricant was applied to all gear interfaces to prevent binding.
+      </p>
+
+      <h3>Custom End Effector</h3>
+      <p>
+        A custom linkage-type gripper was designed and fabricated to replace the stock end effector. Actuated by a single 25 kg servo motor, the design prioritizes mechanical simplicity, direct actuation, and easy maintenance. Gripping force is moderate but sufficient for the arm's ~1 kg payload rating. All CAD files are included in the repository.
+      </p>
+      
+      <img src="../../assets/epione/gripper.png" alt="Endeffector" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+    </div>
+
+    <hr class="divider">
+
+    <!-- ELECTRICAL -->
+    <div class="section-block">
+      <p class="section-label">02 — Electrical</p>
+      <h2>Wiring Architecture</h2>
+      <p>
+        The electrical system was implemented with flexibility in mind — specific pin mappings are not enforced since different builds may require different configurations. Two CNC motor shields stacked on an Arduino Mega provide eight motor ports total, six of which drive the arm's stepper motors. The servo is powered separately through a buck converter for regulated voltage.
+      </p>
+
+      <h3>Limit Switches</h3>
+      <p>
+        The original Arctos design includes magnetically activated limit switches. These were intentionally omitted due to wiring complexity, observed unreliability, and added assembly overhead. The system operates open-loop — no encoder feedback or closed-loop position verification. Safe operation relies on slow motor speeds and manual visual checks.
+      </p>
+
+      <p>The schematic below is a simplified version of the official Arctos electrical diagram, trimmed to only the necessary pins. The gesture control mode uses an identical wiring layout — the joystick remains connected but is simply unused.</p>
+
+      <img src="../../assets/epione/epione-schematic.png" alt="electrical schematic" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+    </div>
+
+    <hr class="divider">
+
+    <!-- PROGRAMMING -->
+    <div class="section-block">
+      <p class="section-label">03 — Programming</p>
+      <h2>Dual-Mode Control Software</h2>
+      <p>
+        The software stack spans both Arduino (C++) and Python, implementing two entirely independent control modes. The shared header and motor abstraction layer keeps firmware clean and mode-agnostic. Each mode is uploaded and run independently — no switching at runtime.
+      </p>
+
+      <!-- moveMotors -->
+      <h3>Motor Abstraction — moveMotors.cpp</h3>
+      <p>
+        A single <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">moveMotors(dir)</code> function handles all actuator logic through a mode switch. The servo is updated incrementally with position clamping; stepper cases use <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">moveTo()</code> relative to current position. Motor pairs that work in opposition (modes 2/3) have their direction inverted inline.
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">moveMotors.cpp</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre><span class="pp">#include</span> <span class="str">"common.h"</span>
+
+<span class="kw">void</span> <span class="fn">moveMotors</span>(<span class="tp">int</span> dir) {
+  <span class="tp">int</span> scaledStep = STEP_SCALE * dir;
+
+  <span class="kw">switch</span> (currentMode) {
+    <span class="kw">case</span> <span class="num">1</span>: <span class="cm">// servo — end effector</span>
+      servoPosition += dir;
+      servoPosition = constrain(servoPosition, <span class="num">0</span>, <span class="num">180</span>);
+      motor7.write(servoPosition);
+      <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">2</span>: <span class="cm">// opposite: motors 0 and 3</span>
+      motors[<span class="num">0</span>].moveTo(motors[<span class="num">0</span>].currentPosition() + scaledStep);
+      motors[<span class="num">3</span>].moveTo(motors[<span class="num">3</span>].currentPosition() + scaledStep);
+      <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">3</span>: <span class="cm">// together: motors 0 and 3 opposing</span>
+      motors[<span class="num">0</span>].moveTo(motors[<span class="num">0</span>].currentPosition() + scaledStep);
+      motors[<span class="num">3</span>].moveTo(motors[<span class="num">3</span>].currentPosition() - scaledStep);
+      <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">4</span>: <span class="cm">// base rotation — motor 6</span>
+      motors[<span class="num">5</span>].setMaxSpeed(<span class="num">400</span>);
+      motors[<span class="num">5</span>].setAcceleration(<span class="num">200</span>);
+      motors[<span class="num">5</span>].moveTo(motors[<span class="num">5</span>].currentPosition() + scaledStep);
+      <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">5</span>: <span class="cm">// lower gearbox</span>
+      motors[<span class="num">1</span>].moveTo(motors[<span class="num">1</span>].currentPosition() + scaledStep);
+      <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">6</span>: <span class="cm">// upper gearbox</span>
+      motors[<span class="num">2</span>].moveTo(motors[<span class="num">2</span>].currentPosition() + scaledStep);
+      <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">7</span>: <span class="cm">// wrist</span>
+      motors[<span class="num">4</span>].moveTo(motors[<span class="num">4</span>].currentPosition() + scaledStep);
+      <span class="kw">break</span>;
+  }
+}
+
+<span class="kw">void</span> <span class="fn">stopMotors</span>() {
+  <span class="kw">if</span> (currentMode == <span class="num">1</span>) {
+    motor7.write(servoPosition); <span class="cm">// hold servo</span>
+  } <span class="kw">else</span> {
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; <span class="num">6</span>; i++) motors[i].stop();
+  }
+}</pre>
+      </div>
+
+      <!-- MANUAL MODE -->
+      <h3>Mode A — Manual Joystick Control</h3>
+      <p>
+        The manual firmware uses a joystick (VRx axis + button) alongside Serial Monitor input for motor selection. The joystick button cycles through 7 modes; the Serial port accepts characters <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">1–7</code> for direct selection. Servo control is velocity-based — joystick deflection maps to a rotation speed rather than a position, allowing proportional control. Stepper movement uses the joystick magnitude scaled to step size.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mode</th>
+              <th>Actuator</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Servo (motor 7)</td><td>End effector — velocity-based, clamped 0–180°</td></tr>
+            <tr><td>2</td><td>Motors 1 + 4</td><td>Opposite movement</td></tr>
+            <tr><td>3</td><td>Motors 1 + 4</td><td>Together (opposing directions)</td></tr>
+            <tr><td>4</td><td>Motor 6</td><td>Base rotation</td></tr>
+            <tr><td>5</td><td>Motor 2</td><td>Lower gearbox</td></tr>
+            <tr><td>6</td><td>Motor 3</td><td>Upper gearbox</td></tr>
+            <tr><td>7</td><td>Motor 5</td><td>Wrist</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">manual_control.ino</span>
+          <span class="code-lang">Arduino / C++</span>
+        </div>
+        <pre><span class="pp">#include</span> <span class="str">"common.h"</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.begin(<span class="num">115200</span>);
+  <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; <span class="num">6</span>; i++) {
+    motors[i].setMaxSpeed(MAX_STEPPER_SPEED);
+    motors[i].setAcceleration(MAX_STEPPER_ACCEL);
+  }
+  motor7.attach(SERVO_PIN);
+  motor7.write(servoPosition);
+  pinMode(JOY_SW, INPUT_PULLUP);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="cm">// --- Serial motor selection ---</span>
+  <span class="kw">if</span> (Serial.available()) {
+    <span class="tp">char</span> input = Serial.read();
+    <span class="kw">if</span> (input &gt;= <span class="str">'1'</span> &amp;&amp; input &lt;= <span class="str">'7'</span>)
+      currentMode = input - <span class="str">'0'</span>;
+  }
+
+  <span class="cm">// --- Joystick button cycles modes ---</span>
+  <span class="tp">bool</span> btn = digitalRead(JOY_SW);
+  <span class="kw">if</span> (btn == LOW &amp;&amp; lastButtonState == HIGH) {
+    currentMode = (currentMode % <span class="num">7</span>) + <span class="num">1</span>;
+    delay(<span class="num">200</span>); <span class="cm">// debounce</span>
+  }
+  lastButtonState = btn;
+
+  <span class="cm">// --- Joystick read + dead zone ---</span>
+  <span class="tp">int</span> vx = analogRead(JOY_VX) - <span class="num">512</span>;
+  <span class="kw">if</span> (abs(vx) &lt; DEAD_ZONE) vx = <span class="num">0</span>;
+
+  <span class="cm">// --- Servo: velocity-based ---</span>
+  <span class="kw">if</span> (currentMode == <span class="num">1</span> &amp;&amp; abs(vx) &gt; SERVO_DEAD_ZONE) {
+    <span class="tp">float</span> dt = (millis() - lastServoUpdate) / <span class="num">1000.0</span>;
+    servoPosition += (vx / <span class="num">512.0</span>) * SERVO_MAX_SPEED * dt;
+    servoPosition = constrain(servoPosition, <span class="num">0</span>, <span class="num">180</span>);
+    motor7.write(servoPosition);
+    lastServoUpdate = millis();
+  }
+
+  <span class="cm">// --- Stepper: scaled step ---</span>
+  <span class="kw">if</span> (vx != <span class="num">0</span> &amp;&amp; currentMode != <span class="num">1</span>)
+    moveMotors(vx &gt; <span class="num">0</span> ? <span class="num">1</span> : <span class="num">-1</span>);
+
+  <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; <span class="num">6</span>; i++) motors[i].run();
+}</pre>
+      </div>
+
+      <!-- GESTURE MODE -->
+      <h3>Mode B — Vision-Based Gesture Control</h3>
+      <p>
+        The gesture control pipeline runs entirely in Python using MediaPipe for real-time hand landmark detection. A state machine governs the interaction: the user first holds a fist for 5 seconds to enter Selection Mode, then holds up 1–5 fingers to choose a motor. After a 2-second activation countdown, single and double finger gestures drive the selected motor forward or backward. A fist held for 5 seconds at any time resets to selection. The back of the hand must face the camera for stable detection; left-hand tracking was found to be unreliable.
+      </p>
+      <p>
+        Gesture stability is enforced via a rolling buffer — a gesture must be consistent across 8 consecutive frames before being recognized, eliminating false triggers from hand movement.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Gesture</th>
+              <th>Hold Duration</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>✊ Fist</td><td>5 seconds</td><td>Enter / return to Selection Mode</td></tr>
+            <tr><td>1–5 fingers</td><td>5 seconds</td><td>Select motor 1–5</td></tr>
+            <tr><td>☝ 1 finger</td><td>Continuous</td><td>Move selected motor forward</td></tr>
+            <tr><td>✌ 2 fingers</td><td>Continuous</td><td>Move selected motor backward</td></tr>
+            <tr><td>✊ Fist</td><td>&lt; 5 seconds</td><td>Stop motor</td></tr>
+            <tr><td>Other / none</td><td>—</td><td>Idle (no command sent)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">gesture_control.ino</span>
+          <span class="code-lang">Arduino / C++</span>
+        </div>
+        <pre><span class="pp">#include</span> <span class="str">"common.h"</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.begin(<span class="num">115200</span>);
+  <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+    motors[i].setMaxSpeed(MAX_STEPPER_SPEED);
+    motors[i].setAcceleration(MAX_STEPPER_ACCEL);
+  }
+  pinMode(FLOAT_STEP, INPUT_PULLUP);
+  pinMode(FLOAT_DIR,  INPUT_PULLUP);
+  myServo.attach(SERVO_PIN);
+  myServo.write(servoPosition);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">static</span> String inputLine = <span class="str">""</span>;
+  <span class="kw">static</span> <span class="tp">bool</span>   motorActive{};
+  <span class="tp">char</span> c{};
+
+  <span class="cm">// --- Parse "motor,cmd\n" from Python ---</span>
+  <span class="kw">while</span> (Serial.available()) {
+    c = Serial.read();
+    <span class="kw">if</span> (c == <span class="str">'\n'</span>) {
+      <span class="tp">int</span> comma = inputLine.indexOf(<span class="str">','</span>);
+      <span class="kw">if</span> (comma &gt; <span class="num">0</span>) {
+        <span class="tp">int</span> motor = inputLine.substring(<span class="num">0</span>, comma).toInt();
+        <span class="tp">int</span> cmd   = inputLine.substring(comma + <span class="num">1</span>).toInt();
+        <span class="kw">if</span> (!motorActive &amp;&amp; motor &gt;= <span class="num">1</span> &amp;&amp; motor &lt;= <span class="num">5</span>) {
+          currentMode = motor; motorActive = <span class="kw">true</span>;
+        }
+        <span class="kw">if</span> (motorActive &amp;&amp; motor == currentMode) {
+          <span class="kw">if</span>      (cmd == <span class="num">1</span>) moveMotors(<span class="num">2</span>);
+          <span class="kw">else if</span> (cmd == <span class="num">2</span>) moveMotors(<span class="num">-2</span>);
+          <span class="kw">else if</span> (cmd == <span class="num">0</span>) stopMotors();
+        }
+      }
+      inputLine = <span class="str">""</span>;
+    } <span class="kw">else</span> inputLine += c;
+  }
+
+  <span class="cm">// --- Fist held 5s → reset selection ---</span>
+  <span class="kw">if</span> (fistHoldStart != <span class="num">0</span> &amp;&amp; millis() - fistHoldStart &gt;= <span class="num">5000</span>) {
+    currentMode = <span class="num">0</span>; motorActive = <span class="kw">false</span>; fistHoldStart = <span class="num">0</span>;
+  }
+
+  <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) motors[i].run();
+}</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">obj_Detect.py</span>
+          <span class="code-lang">Python</span>
+        </div>
+        <pre><span class="pp">import</span> cv2, mediapipe <span class="kw">as</span> mp, serial, time
+<span class="pp">from</span> collections <span class="pp">import</span> deque
+
+<span class="cm"># --- Setup ---</span>
+ser = serial.Serial(<span class="str">'/dev/ttyACM0'</span>, <span class="num">115200</span>, timeout=<span class="num">0.1</span>)
+time.sleep(<span class="num">2</span>)
+hands = mp.solutions.hands.Hands(max_num_hands=<span class="num">1</span>)
+cap   = cv2.VideoCapture(<span class="num">0</span>)
+
+<span class="cm"># --- State machine ---</span>
+STATE_IDLE      = <span class="num">0</span>  <span class="cm"># waiting for fist trigger</span>
+STATE_SELECTION = <span class="num">1</span>  <span class="cm"># choosing a motor</span>
+STATE_DIRECTION = <span class="num">2</span>  <span class="cm"># motor selected, awaiting gesture</span>
+state = STATE_IDLE; selected_motor = <span class="kw">None</span>
+
+<span class="cm"># --- Config ---</span>
+STABLE_FRAMES   = <span class="num">8</span>    <span class="cm"># consecutive frames for gesture confirmation</span>
+TRIGGER_HOLD    = <span class="num">5.0</span>  <span class="cm"># seconds to hold for state transition</span>
+SELECTION_DELAY = <span class="num">2.0</span>  <span class="cm"># countdown after motor selection</span>
+gesture_buffer  = deque(maxlen=STABLE_FRAMES)
+
+<span class="kw">def</span> <span class="fn">get_finger_states</span>(lm):
+    <span class="cm"># Thumb: tip x vs joint x; others: tip y vs dip y</span>
+    tips = [<span class="num">4</span>,<span class="num">8</span>,<span class="num">12</span>,<span class="num">16</span>,<span class="num">20</span>]; dips = [<span class="num">3</span>,<span class="num">6</span>,<span class="num">10</span>,<span class="num">14</span>,<span class="num">18</span>]
+    fingers = {<span class="str">"thumb"</span>: lm.landmark[<span class="num">4</span>].x &lt; lm.landmark[<span class="num">3</span>].x}
+    <span class="kw">for</span> i, tip <span class="kw">in</span> enumerate(tips[<span class="num">1</span>:]):
+        fingers[[<span class="str">"index"</span>,<span class="str">"middle"</span>,<span class="str">"ring"</span>,<span class="str">"pinky"</span>][i]] = \
+            lm.landmark[tip].y &lt; lm.landmark[dips[i+<span class="num">1</span>]].y
+    <span class="kw">return</span> fingers
+
+<span class="kw">while</span> cap.isOpened():
+    ok, img = cap.read()
+    <span class="kw">if not</span> ok: <span class="kw">break</span>
+    res = hands.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+
+    <span class="kw">if</span> res.multi_hand_landmarks:
+        finger_count = sum(get_finger_states(res.multi_hand_landmarks[<span class="num">0</span>]).values())
+        gesture_buffer.append(finger_count)
+        stable = gesture_buffer[<span class="num">0</span>] <span class="kw">if</span> len(gesture_buffer)==STABLE_FRAMES \
+                 <span class="kw">and</span> all(v==gesture_buffer[<span class="num">0</span>] <span class="kw">for</span> v <span class="kw">in</span> gesture_buffer) <span class="kw">else</span> <span class="kw">None</span>
+        <span class="cm"># ... state machine transitions + serial send ...</span>
+    <span class="kw">else</span>:
+        gesture_buffer.clear()
+
+    <span class="kw">if</span> cv2.waitKey(<span class="num">1</span>) &amp; <span class="num">0xFF</span> == <span class="num">27</span>: <span class="kw">break</span>
+
+cap.release(); ser.close(); cv2.destroyAllWindows()</pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Demo Video -->
+    <div class="section-block">
+      <p class="section-label">04 — Demo</p>
+      <h2>Manual Control In Action</h2>
+
+      <!-- Demo video — manual -->
+      <div class="media-placeholder">
+        <div class="ph-icon">▶</div>
+        <div class="ph-label">Demo video — Manual joystick control</div>
+        <div class="ph-label">Coming soon</div>
+      </div>
+      
+      <br>
+
+      <h2>Gesture Control In Action</h2>
+
+      <!-- Demo video — gesture -->
+      <div class="media-placeholder">
+        <div class="ph-icon">▶</div>
+        <div class="ph-label">Demo video — Vision-based gesture control</div>
+        <div class="ph-label">Coming soon</div>
+      </div>
+
+
+    <hr class="divider">
+
+    <!-- TEAM -->
+    <div class="section-block">
+      <p class="section-label">05 — Team</p>
+      <h2>Collaborators</h2>
+      <p>
+        This project was a collaborative university effort. The work below would not have been possible without the full team's contributions across mechanical design, assembly, electrical integration, and software.
+      </p>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="tc-role">Electrical &amp; Programming</div>
+          <div class="tc-name">Radin Jafari</div>
+          <a href="https://www.linkedin.com/in/radin-jafari/" target="_blank">LinkedIn ↗</a>
+        </div>
+        <div class="team-card">
+          <div class="tc-role">Mechanical &amp; Design</div>
+          <div class="tc-name">Wilson Yang</div>
+          <a href="https://www.linkedin.com/in/shihweiyang/" target="_blank">LinkedIn ↗</a>
+        </div>
+        <div class="team-card">
+          <div class="tc-role">Mechanical &amp; Assembly</div>
+          <div class="tc-name">Hongyi Zhu</div>
+          <a href="https://www.linkedin.com/in/hongyi-zhu-065a71336/" target="_blank">LinkedIn ↗</a>
+        </div>
+        <div class="team-card">
+          <div class="tc-role">Mechanical &amp; Assembly</div>
+          <div class="tc-name">Brady Dong</div>
+          <a href="https://www.linkedin.com/in/brady-dong/" target="_blank">LinkedIn ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- SOURCE -->
+    <div class="section-block">
+      <p class="section-label">Source</p>
+      <h2>View on GitHub</h2>
+      <a href="https://github.com/rjafari44/Epione-Robot-Arm" target="_blank" style="display:inline-flex;align-items:center;gap:0.6rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink);text-decoration:none;border:1px solid var(--border);padding:0.75rem 1.25rem;border-radius:3px;transition:border-color 0.2s,color 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 0 1 3.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.652.242 2.873.118 3.176.77.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/rjafari44/Epione-Robot-Arm
+      </a>
+    </div>
+
+  </div><!-- /project-body -->
+
+  <footer>© 2025 Radin Jafari</footer>
+
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bode Plot Calculator — Radin Jafari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface-2: #f0efe9;
+      --ink: #1c1b18;
+      --ink-2: #5c5a55;
+      --ink-3: #a8a6a0;
+      --accent: #9a3622;
+      --accent-dim: rgba(154,54,34,0.08);
+      --border: #e0deda;
+      --mono: 'DM Mono', monospace;
+      --serif: 'DM Serif Display', serif;
+      --sans: 'DM Sans', sans-serif;
+      --max: 820px;
+      --code-bg: #1a1917;
+      --code-ink: #d4d0c8;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 3rem; background: rgba(247,246,242,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .nav-brand { font-family: var(--mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .nav-back { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+
+    .project-hero { padding: 10rem 3rem 3rem; max-width: var(--max); margin: 0 auto; }
+    .project-category-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; }
+    .project-category-label::before { content: ''; display: inline-block; width: 20px; height: 2px; background: var(--accent); }
+    h1 { font-family: var(--serif); font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 400; line-height: 1.08; margin-bottom: 1.5rem; }
+    .project-meta { display: flex; flex-wrap: wrap; gap: 2rem; padding: 1.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .meta-item label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 0.2rem; }
+    .meta-item span { font-size: 0.88rem; color: var(--ink); }
+
+    .project-body { max-width: var(--max); margin: 0 auto; padding: 0 3rem 6rem; }
+
+    .section-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .section-label::before { content: ''; display: inline-block; width: 14px; height: 1px; background: var(--accent); }
+    h2 { font-family: var(--serif); font-size: 1.65rem; font-weight: 400; margin-bottom: 1rem; margin-top: 0; }
+    h3 { font-family: var(--mono); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin: 2rem 0 0.75rem; }
+    p { font-size: 0.95rem; color: var(--ink-2); margin-bottom: 1.2rem; line-height: 1.78; }
+    ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.5rem; }
+    ul li { font-size: 0.92rem; color: var(--ink-2); padding-left: 1.4rem; position: relative; line-height: 1.65; }
+    ul li::before { content: '—'; position: absolute; left: 0; color: var(--ink-3); font-size: 0.75rem; top: 0.1rem; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+    .tag { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; padding: 0.3rem 0.75rem; border: 1px solid var(--border); color: var(--ink-2); border-radius: 2px; }
+
+    .section-block { margin-top: 3.5rem; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+    .code-block { background: var(--code-bg); border-radius: 6px; margin: 1.5rem 0 2rem; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .code-filename { font-family: var(--mono); font-size: 0.68rem; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; }
+    .code-lang { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+    .code-block pre { margin: 0; padding: 1.4rem 1.2rem; overflow-x: auto; line-height: 1.65; font-family: var(--mono); font-size: 0.78rem; color: var(--code-ink); }
+    .code-block pre .cm { color: #686660; font-style: italic; }
+    .code-block pre .kw { color: #c5966a; }
+    .code-block pre .fn { color: #8ab5c5; }
+    .code-block pre .num { color: #d19a66; }
+    .code-block pre .str { color: #98b87a; }
+
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0 2rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; font-family: var(--mono); }
+    thead tr { border-bottom: 2px solid var(--ink); }
+    thead th { text-align: left; padding: 0.5rem 0.75rem; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); font-weight: 500; }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 0.55rem 0.75rem; color: var(--ink-2); }
+    tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+    footer { text-align: center; padding: 2.5rem 3rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); letter-spacing: 0.08em; }
+
+    @media (max-width: 760px) {
+      nav { padding: 1rem 1.5rem; }
+      .project-hero, .project-body { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-brand" href="../../index.html">Radin Jafari</a>
+    <a class="nav-back" href="../../index.html#projects">← Back to Projects</a>
+  </nav>
+
+  <div class="project-hero">
+    <p class="project-category-label">Software · Python · Signals & Systems</p>
+    <h1>Bode Plot Calculator</h1>
+    <div class="project-meta">
+      <div class="meta-item"><label>Language</label><span>Python</span></div>
+      <div class="meta-item"><label>Domain</label><span>Signals & Systems · EE</span></div>
+      <div class="meta-item"><label>Interface</label><span>Command Line</span></div>
+      <div class="meta-item"><label>Scope</label><span>Solo Project</span></div>
+    </div>
+  </div>
+
+  <div class="project-body">
+
+    <div class="tag-row">
+      <span class="tag">Python</span>
+      <span class="tag">Matplotlib</span>
+      <span class="tag">SciPy</span>
+      <span class="tag">NumPy</span>
+      <span class="tag">Signals & Systems</span>
+      <span class="tag">EE</span>
+      <span class="tag">Transfer Functions</span>
+      <span class="tag">Frequency Analysis</span>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="section-block" style="margin-top:1.5rem;">
+      <p class="section-label">Overview</p>
+      <h2>Transfer function input to Bode plot in one command</h2>
+      <p>
+        A command-line tool that accepts a transfer function H(s) — entered as a plain text expression — and produces accurate magnitude and phase plots using Matplotlib and SciPy. The goal was to make frequency-domain analysis fast and frictionless: no GUI, no coefficient arrays to manually type out, just the expression as you'd write it on paper.
+      </p>
+      <p>
+        The script parses factored forms, distributed forms, and any mix of the two. Asterisks are optional, missing terms are filled in automatically, and if a typo is detected the script prompts you to re-enter rather than crashing.
+      </p>
+    </div>
+
+    <div style="display:flex;gap:1rem;margin:1.5rem 0;">
+      <img src="../../assets/bode-plot/bode-plot-magnitude.png" alt="Magnitude plot" style="width:50%;border-radius:3px;border:1px solid var(--border);" />
+      <img src="../../assets/bode-plot/bode-plot-phase.png" alt="Phase plot" style="width:50%;border-radius:3px;border:1px solid var(--border);" />
+    </div>
+    <p style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;color:var(--ink-3);margin-top:-0.5rem;margin-bottom:1.5rem;">Sample output — H(s) = 1 / (s + 5), 1st Order Low-Pass</p>
+
+    <hr class="divider">
+
+    <!-- DESIGN & ARCHITECTURE -->
+    <div class="section-block">
+      <p class="section-label">01 — Design & Architecture</p>
+      <h2>Parsing & Classification Pipeline</h2>
+      <p>
+        The script is organized around two parsing stages and a classification stage, all feeding into a SciPy <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">TransferFunction</code> object that drives the plot.
+      </p>
+      <p>
+        <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">parse_distributed()</code> handles a single expanded polynomial string, building a coefficient array in descending power order. <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">parse_expression()</code> is the top-level entry point: it strips any leading scalar, then either delegates to <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">parse_distributed()</code> for plain polynomials, or tokenises parenthesised factors and multiplies them together via <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">np.polymul</code>.
+      </p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">bode_calculator.py</span>
+          <span class="code-lang">Python</span>
+        </div>
+        <pre><span class="kw">def</span> <span class="fn">parse_expression</span>(expr):
+    expr = expr.<span class="fn">replace</span>(<span class="str">" "</span>, <span class="str">""</span>).<span class="fn">replace</span>(<span class="str">"**"</span>, <span class="str">"^"</span>)
+
+    <span class="cm"># Extract optional leading scalar (e.g. the 0.2 in 0.2(s+10))</span>
+    scalar = <span class="num">1.0</span>
+    scalar_match = re.<span class="fn">match</span>(<span class="str">r'^([+-]?\d*\.?\d+)\*?(?=[\(s])'</span>, expr)
+    <span class="kw">if</span> scalar_match:
+        scalar = <span class="fn">float</span>(scalar_match.<span class="fn">group</span>(<span class="num">1</span>))
+        expr = expr[scalar_match.<span class="fn">end</span>():]
+
+    <span class="kw">if</span> <span class="str">'('</span> <span class="kw">not in</span> expr:
+        <span class="kw">return</span> <span class="fn">parse_distributed</span>(expr, scalar=scalar).<span class="fn">tolist</span>()
+
+    <span class="cm"># Tokenise into groups, then multiply all factors together</span>
+    tokens = re.<span class="fn">findall</span>(<span class="str">r's\^\d+|s(?!\^)|\([^)]+\)'</span>, expr)
+    poly = np.<span class="fn">array</span>([scalar])
+    <span class="kw">for</span> token <span class="kw">in</span> tokens:
+        poly = np.<span class="fn">polymul</span>(poly, factor)
+
+    <span class="kw">return</span> poly.<span class="fn">tolist</span>()</pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- KEY FEATURES -->
+    <div class="section-block">
+      <p class="section-label">02 — Key Features</p>
+      <h2>Flexible Input & Automatic Classification</h2>
+
+      <h3>Expression Parsing</h3>
+      <p>
+        The parser accepts expressions in any combination of factored and distributed form. Terms don't need to be in order and missing powers are filled in automatically.
+      </p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">valid inputs</span>
+          <span class="code-lang">Examples</span>
+        </div>
+        <pre><span class="cm"># All of the following are valid inputs</span>
+
+Factored:      <span class="num">0.2</span>(s + <span class="num">10</span>)(s + <span class="num">2</span>)
+Distributed:   s^<span class="num">5</span> + <span class="num">5</span>s^<span class="num">4</span> + <span class="num">3</span>s + <span class="num">1</span>
+Mixed:         <span class="num">0.2</span>(s + <span class="num">10</span>)(s^<span class="num">2</span> + <span class="num">3</span>s + <span class="num">2</span>)
+Bare s:        s(s + <span class="num">2</span>)
+No asterisk:   <span class="num">0.2</span>(s+<span class="num">10</span>)   ≡   <span class="num">0.2</span>*(s+<span class="num">10</span>)</pre>
+      </div>
+
+      <h3>Filter Classification</h3>
+      <p>
+        After parsing, <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">classify_filter()</code> inspects the roots of the numerator and denominator to detect integrators, differentiators, and right-half-plane zeros, then maps the polynomial orders to a filter label shown in the plot title. Classification is supported up to 3rd order.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Denominator Order</th><th>Classifications</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1st order</td><td>Low-Pass, High-Pass / Shelving</td></tr>
+            <tr><td>2nd order</td><td>Low-Pass, Band-Pass, High-Pass / Notch, Notch (Non-Minimum Phase)</td></tr>
+            <tr><td>3rd order</td><td>Low-Pass, Low-Pass / Band-Pass, Band-Pass, High-Pass / Shelving</td></tr>
+            <tr><td>Any order</td><td>Integrator / Low-Pass, Differentiator / High-Pass, Band-Pass (Integrator + Differentiator)</td></tr>
+            <tr><td>Above 3rd</td><td>Plot renders accurately — filter label not supported</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- REFLECTION -->
+    <div class="section-block">
+      <p class="section-label">03 — Reflection</p>
+      <h2>What I Learned</h2>
+      <p>
+        Writing a robust expression parser from scratch — without a symbolic math library — pushed me to think carefully about edge cases: implicit coefficients, optional asterisks, mixed factored and distributed forms, and duplicate powers. Regex alone isn't enough; the real work is in correctly combining the tokenised factors via polynomial multiplication.
+      </p>
+      <p>
+        The classification logic was a good exercise in translating control-theory knowledge into code: deciding what pole and zero conditions uniquely identify a filter type, handling integrators and differentiators as cross-cutting concerns, and knowing where to draw the line on automated classification rather than produce a misleading label.
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- SOURCE -->
+    <div class="section-block">
+      <p class="section-label">Source</p>
+      <h2>View on GitHub</h2>
+      <a href="https://github.com/rjafari44/Bode-Plot-Calculator" target="_blank" style="display:inline-flex;align-items:center;gap:0.6rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink);text-decoration:none;border:1px solid var(--border);padding:0.75rem 1.25rem;border-radius:3px;transition:border-color 0.2s,color 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 0 1 3.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.652.242 2.873.118 3.176.77.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/rjafari44/Bode-Plot-Calculator
+      </a>
+    </div>
+
+  </div><!-- /project-body -->
+
+  <footer>© 2026 Radin Jafari</footer>
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cornelius — Autonomous Arduino Rover — Radin Jafari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface-2: #f0efe9;
+      --ink: #1c1b18;
+      --ink-2: #5c5a55;
+      --ink-3: #a8a6a0;
+      --accent: #9a3622;
+      --accent-dim: rgba(154,54,34,0.08);
+      --border: #e0deda;
+      --mono: 'DM Mono', monospace;
+      --serif: 'DM Serif Display', serif;
+      --sans: 'DM Sans', sans-serif;
+      --max: 820px;
+      --code-bg: #1a1917;
+      --code-ink: #d4d0c8;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(247,246,242,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      font-family: var(--mono); font-size: 0.75rem;
+      font-weight: 500; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--ink); text-decoration: none;
+    }
+    .nav-back {
+      font-family: var(--mono); font-size: 0.72rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-2); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--accent); }
+
+    /* ---- HERO ---- */
+    .project-hero {
+      padding: 10rem 3rem 3rem;
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .project-category-label {
+      font-family: var(--mono); font-size: 0.68rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .project-category-label::before {
+      content: ''; display: inline-block;
+      width: 20px; height: 2px; background: var(--accent);
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 400; line-height: 1.08; margin-bottom: 1.5rem;
+    }
+    .project-meta {
+      display: flex; flex-wrap: wrap; gap: 2rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .meta-item label {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--ink-3); display: block; margin-bottom: 0.2rem;
+    }
+    .meta-item span { font-size: 0.88rem; color: var(--ink); }
+
+    /* ---- BODY ---- */
+    .project-body {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 3rem 6rem;
+    }
+
+    .section-label {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-label::before {
+      content: ''; display: inline-block;
+      width: 14px; height: 1px; background: var(--accent);
+    }
+    h2 {
+      font-family: var(--serif); font-size: 1.65rem;
+      font-weight: 400; margin-bottom: 1rem; margin-top: 0;
+    }
+    h3 {
+      font-family: var(--mono); font-size: 0.78rem;
+      font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink);
+      margin: 2rem 0 0.75rem;
+    }
+    p {
+      font-size: 0.95rem; color: var(--ink-2);
+      margin-bottom: 1.2rem; line-height: 1.78;
+    }
+    ul {
+      list-style: none; display: flex;
+      flex-direction: column; gap: 0.45rem;
+      margin-bottom: 1.5rem;
+    }
+    ul li {
+      font-size: 0.92rem; color: var(--ink-2);
+      padding-left: 1.4rem; position: relative; line-height: 1.65;
+    }
+    ul li::before {
+      content: '—'; position: absolute; left: 0;
+      color: var(--ink-3); font-size: 0.75rem; top: 0.1rem;
+    }
+
+    /* ---- TAGS ---- */
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+    .tag {
+      font-family: var(--mono); font-size: 0.65rem;
+      letter-spacing: 0.08em; padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border); color: var(--ink-2);
+      border-radius: 2px;
+    }
+
+    /* ---- SECTION DIVIDER ---- */
+    .section-block { margin-top: 3.5rem; }
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ---- TABLE ---- */
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0 2rem; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem; font-family: var(--mono);
+    }
+    thead tr { border-bottom: 2px solid var(--ink); }
+    thead th {
+      text-align: left; padding: 0.5rem 0.75rem;
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-2); font-weight: 500;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 0.55rem 0.75rem; color: var(--ink-2); }
+    tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+    /* ---- CODE BLOCKS ---- */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: 6px;
+      margin: 1.5rem 0 2rem;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .code-filename {
+      font-family: var(--mono); font-size: 0.68rem;
+      color: rgba(255,255,255,0.45); letter-spacing: 0.08em;
+    }
+    .code-lang {
+      font-family: var(--mono); font-size: 0.62rem;
+      color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .code-block pre {
+      margin: 0; padding: 1.4rem 1.2rem;
+      overflow-x: auto; line-height: 1.65;
+      font-family: var(--mono); font-size: 0.78rem;
+      color: var(--code-ink);
+    }
+    .code-block pre .cm { color: #686660; font-style: italic; }
+    .code-block pre .kw { color: #c5966a; }
+    .code-block pre .fn { color: #8ab5c5; }
+    .code-block pre .num { color: #d19a66; }
+
+    /* ---- FOOTER ---- */
+    footer {
+      text-align: center; padding: 2.5rem 3rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.68rem;
+      color: var(--ink-3); letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 760px) {
+      nav { padding: 1rem 1.5rem; }
+      .project-hero, .project-body { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-brand" href="../../index.html">Radin Jafari</a>
+    <a class="nav-back" href="../../index.html#projects">← Back to Projects</a>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <div class="project-hero">
+    <p class="project-category-label">Robotics · Embedded Systems</p>
+    <h1>Cornelius<br><span style="font-style:italic;color:var(--accent)">Autonomous Obstacle-Avoiding Rover</span></h1>
+    <div class="project-meta">
+      <div class="meta-item"><label>Platform</label><span>Arduino Nano</span></div>
+      <div class="meta-item"><label>Type</label><span>Four Wheeled Robot</span></div>
+      <div class="meta-item"><label>Control</label><span>Autonomous</span></div>
+      <div class="meta-item"><label>Drive</label><span>2WD · TT Gear Motors</span></div>
+      <div class="meta-item"><label>Scope</label><span>Solo Project</span></div>
+    </div>
+  </div>
+
+  <!-- ======== BODY ======== -->
+  <div class="project-body">
+
+    <div class="tag-row">
+      <span class="tag">Arduino</span>
+      <span class="tag">C++</span>
+      <span class="tag">Ultrasonic Sensor</span>
+      <span class="tag">Servo</span>
+      <span class="tag">Autonomous Navigation</span>
+      <span class="tag">Motor Control</span>
+      <span class="tag">Embedded Systems</span>
+      <span class="tag">3D Printing</span>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="section-block" style="margin-top:1.5rem;">
+      <p class="section-label">Overview</p>
+      <h2>A self-navigating rover with no remote control</h2>
+      <p>
+        Cornelius is a self-navigating wheeled rover built from scratch on an Arduino Nano. It uses an HC-SR04 ultrasonic sensor mounted on a micro servo to scan for obstacles in real time and autonomously reroute — no remote control, no pre-programmed paths. The robot makes its own decisions.
+      </p>
+      <p>
+        The chassis and wheels are custom 3D printed in PLA. The project spans mechanical design, electrical wiring, and embedded C++ programming — all done solo.
+      </p>
+    </div>
+
+    <img src="../../assets/cornelius/rover.jpg" alt="Cornelius Rover" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+
+    <hr class="divider">
+
+    <!-- MECHANICAL -->
+    <div class="section-block">
+      <p class="section-label">01 — Mechanical</p>
+      <h2>Chassis & Assembly</h2>
+      <p>
+        The chassis is custom-designed and printed in PLA. The wheels are inspired by a design from Prof. Wolken at Irvine Valley College. The chassis includes ziptie routing holes for motors and wiring, a servo bracket, and mounting tabs for the breadboard, motor driver, and battery holder.
+      </p>
+      <ul>
+        <li>Front wheels mounted to TT motors with zipties; rear wheels attached via nails through a mounting bracket.</li>
+        <li>Servo bracket is slightly loose — tape or a small shim keeps it secure.</li>
+        <li>Ultrasonic sensor bracket sourced online and reinforced with screws and washers.</li>
+        <li>MG90 metal gear servo used — an SG90 works fine and is recommended for this application.</li>
+      </ul>
+    </div>
+
+    <img src="../../assets/cornelius/rover-assmebly.png" alt="Onshape Assembly" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+
+    <hr class="divider">
+
+    <!-- ELECTRICAL -->
+    <div class="section-block">
+      <p class="section-label">02 — Electrical</p>
+      <h2>Power & Wiring</h2>
+      <p>
+        Powered by two 18650 Li-ion batteries in series (~8 V total). The Arduino Nano and L298N motor driver have built-in 5 V regulators which power the HC-SR04 and servo. A 470 µF capacitor across the power rail smooths voltage spikes from motor switching.
+      </p>
+      <ul>
+        <li>TT motors run at 3–6 V — voltage drop across the L298N brings them into safe range.</li>
+        <li>Total current draw kept well under 2 A.</li>
+        <li>Dupont jumper wires used throughout — solid connections are critical to avoid intermittent failures.</li>
+      </ul>
+    </div>
+
+    <img src="../../assets/cornelius/schematic.png" alt="Circuit Schematic" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+
+    <hr class="divider">
+
+    <!-- SOFTWARE -->
+    <div class="section-block">
+      <p class="section-label">03 — Software</p>
+      <h2>How It Works</h2>
+      <p>
+        The main loop continuously reads distance from the ultrasonic sensor. If the path is clear it drives forward. When an obstacle is detected within 20 cm, it stops, backs up briefly, then sweeps the servo left and right to measure clearance on both sides before turning toward the more open direction.
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">Cornelius-Autonomous-Rover.ino</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre><span class="cm">// Run obstacle avoidance only if an obstacle is detected</span>
+<span class="kw">if</span> (obstacleDetected) {
+  <span class="fn">stopMotors</span>();
+  
+
+  delay(<span class="num">200</span>);
+  <span class="fn">moveBackward</span>();
+  delay(<span class="num">300</span>);
+  <span class="fn">stopMotors</span>();
+
+  leftDist  = <span class="fn">lookLeft</span>();
+  rightDist = <span class="fn">lookRight</span>();
+
+  <span class="kw">if</span> (leftDist > rightDist) <span class="fn">turnLeft</span>();
+  <span class="kw">else</span>                      <span class="fn">turnRight</span>();
+
+  delay(<span class="num">400</span>);
+  <span class="fn">stopMotors</span>();
+}</pre>
+      </div>
+
+      <h3>Movement Logic</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Movement</th><th>IN1</th><th>IN2</th><th>IN3</th><th>IN4</th><th>ENA</th><th>ENB</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Forward</td><td>1</td><td>0</td><td>1</td><td>0</td><td>PWM</td><td>PWM</td></tr>
+            <tr><td>Backward</td><td>0</td><td>1</td><td>0</td><td>1</td><td>PWM</td><td>PWM</td></tr>
+            <tr><td>Turn Left</td><td>0</td><td>1</td><td>1</td><td>0</td><td>PWM</td><td>PWM</td></tr>
+            <tr><td>Turn Right</td><td>1</td><td>0</td><td>0</td><td>1</td><td>PWM</td><td>PWM</td></tr>
+            <tr><td>Stop</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Demo -->
+    <div class="section-block">
+    <p class="section-label">04 — Demo</p>
+    <h2>In Action</h2>
+    
+    <video src="../../assets/" controls style="width:50%; display:block; margin:0 auto; border-radius:3px;"></video>
+
+    </div>
+
+    <hr class="divider">
+
+    <!-- REFLECTION -->
+    <div class="section-block">
+      <p class="section-label">05 — Reflection</p>
+      <h2>What I Learned</h2>
+      <p>
+        This project sharpened my ability to write clean embedded C++ under tight hardware constraints, think through edge cases in autonomous behavior, and debug physical systems where software issues and mechanical issues can look identical. Structuring the code across multiple <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">.cpp</code> files with a shared header was also good practice for keeping embedded projects organized.
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- SOURCE -->
+    <div class="section-block">
+      <p class="section-label">Source</p>
+      <h2>View on GitHub</h2>
+      <a href="https://github.com/rjafari44/Cornelius-Autonomous-Rover" target="_blank" style="display:inline-flex;align-items:center;gap:0.6rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink);text-decoration:none;border:1px solid var(--border);padding:0.75rem 1.25rem;border-radius:3px;transition:border-color 0.2s,color 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 0 1 3.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.652.242 2.873.118 3.176.77.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/rjafari44/Cornelius-Autonomous-Rover
+      </a>
+    </div>
+
+  </div><!-- /project-body -->
+
+  <footer>© 2026 Radin Jafari</footer>
+
+</body>
+</html>

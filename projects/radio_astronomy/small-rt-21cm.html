@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>21 cm Hydrogen Line Radio Telescope — Radin Jafari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f6f2; --surface: #ffffff; --ink: #1c1b18; --ink-2: #5c5a55;
+      --ink-3: #a8a6a0; --accent: #1e4d82; --border: #e0deda;
+      --mono: 'DM Mono', monospace; --serif: 'DM Serif Display', serif;
+      --sans: 'DM Sans', sans-serif; --max: 780px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 3rem; background: rgba(247,246,242,0.9); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+    .nav-brand { font-family: var(--mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .nav-back { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+
+    .project-hero { padding: 10rem 3rem 4rem; max-width: var(--max); margin: 0 auto; }
+    .project-category-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; }
+    .project-category-label::before { content: ''; display: inline-block; width: 20px; height: 2px; background: var(--accent); }
+    h1 { font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 400; line-height: 1.1; margin-bottom: 1.5rem; }
+    .project-meta { display: flex; flex-wrap: wrap; gap: 2rem; padding: 1.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+    .meta-item label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 0.2rem; }
+    .meta-item span { font-size: 0.88rem; color: var(--ink); }
+
+    .project-body { max-width: var(--max); margin: 0 auto; padding: 0 3rem 6rem; }
+    .project-body h2 { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; margin: 2.5rem 0 0.8rem; }
+    .project-body p { font-size: 0.95rem; color: var(--ink-2); margin-bottom: 1.2rem; line-height: 1.75; }
+    .project-body ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .project-body ul li { font-size: 0.92rem; color: var(--ink-2); padding-left: 1.2rem; position: relative; }
+    .project-body ul li::before { content: '—'; position: absolute; left: 0; color: var(--ink-3); font-size: 0.75rem; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+    .tag { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; padding: 0.28rem 0.7rem; border: 1px solid var(--border); color: var(--ink-2); border-radius: 2px; }
+
+    .signal-chain {
+      display: flex; align-items: center; flex-wrap: wrap;
+      gap: 0; margin: 1.5rem 0 2rem;
+    }
+    .chain-block {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 0.8rem 1.1rem; border-radius: 2px;
+      text-align: center; flex: 1; min-width: 100px;
+    }
+    .chain-block label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 0.2rem; }
+    .chain-block span { font-size: 0.8rem; color: var(--ink); }
+    .chain-arrow { font-family: var(--mono); color: var(--ink-3); font-size: 0.9rem; padding: 0 0.4rem; flex-shrink: 0; }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent);
+      border: 1px solid var(--accent); padding: 0.3rem 0.8rem;
+      border-radius: 2px; margin-bottom: 2rem;
+    }
+    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 1.8s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .placeholder-banner { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 1.2rem 1.5rem; border-radius: 2px; margin: 2rem 0; font-family: var(--mono); font-size: 0.75rem; color: var(--ink-3); letter-spacing: 0.05em; }
+
+    footer { text-align: center; padding: 2rem 3rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); letter-spacing: 0.08em; }
+
+    @media (max-width: 760px) {
+      nav { padding: 1rem 1.5rem; }
+      .project-hero, .project-body { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .chain-arrow { display: none; }
+      .signal-chain { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-brand" href="../../index.html">Radin Jafari</a>
+    <a class="nav-back" href="../../index.html#projects">← Back to Projects</a>
+  </nav>
+
+  <div class="project-hero">
+    <p class="project-category-label">Radio Astronomy</p>
+    <h1>21 cm Hydrogen Line<br><span style="font-style:italic;color:var(--accent)">Radio Telescope</span></h1>
+    <div class="project-meta">
+      <div class="meta-item"><label>Target Frequency</label><span>1420.405 MHz</span></div>
+      <div class="meta-item"><label>Dish Diameter</label><span>2.2 m</span></div>
+      <div class="meta-item"><label>Mounting</label><span>Altitude-Azimuth</span></div>
+      <div class="meta-item"><label>Status</label><span>Work in Progress</span></div>
+    </div>
+  </div>
+
+  <div class="project-body">
+
+    <div class="status-badge">In Progress</div>
+
+    <div class="tag-row">
+      <span class="tag">RF / Radio Astronomy</span>
+      <span class="tag">RTL-SDR</span>
+      <span class="tag">1420 MHz</span>
+      <span class="tag">Signal Processing</span>
+      <span class="tag">Spectrum Analysis</span>
+      <span class="tag">Alt-Az Mount</span>
+    </div>
+
+    <h2>Overview</h2>
+    <p>
+      This project is a ground-up radio telescope designed to detect the 21 cm hydrogen line — a spectral emission at 1420.405 MHz produced by neutral hydrogen atoms throughout the galaxy. Observing this line is one of the most fundamental techniques in radio astronomy, and the distribution of hydrogen across the Milky Way carries direct evidence for the large-scale structure of the universe that cosmological models like the Big Bang theory describe.
+    </p>
+    <p>
+      The telescope uses a 2.2 m parabolic dish mounted on a custom altitude-azimuth system, allowing it to be pointed to any position in the sky. The project is currently in active development and has been partially validated through bench testing with a spectrum analyzer and signal generator.
+    </p>
+
+    <h2>Signal Chain</h2>
+    <div class="signal-chain">
+      <div class="chain-block"><label>Receive</label><span>2.2 m Dish</span></div>
+      <span class="chain-arrow">→</span>
+      <div class="chain-block"><label>Amplify</label><span>LNA</span></div>
+      <span class="chain-arrow">→</span>
+      <div class="chain-block"><label>Filter</label><span>1420 MHz BPF</span></div>
+      <span class="chain-arrow">→</span>
+      <div class="chain-block"><label>Digitize</label><span>RTL-SDR</span></div>
+      <span class="chain-arrow">→</span>
+      <div class="chain-block"><label>Process</label><span>Software</span></div>
+    </div>
+
+    <p>
+      The RTL-SDR dongle acts as the analog-to-digital converter and software-defined radio receiver — it takes the conditioned RF signal from the dish and converts it into a digital stream that can be processed in software to produce a spectrum. This approach keeps the system low-cost and flexible while still being capable of resolving the narrow hydrogen line emission.
+    </p>
+
+    <h2>Mechanical System</h2>
+    <ul>
+      <li>2.2 m parabolic dish providing sufficient gain to detect faint galactic hydrogen emissions.</li>
+      <li>Altitude-azimuth mount enabling full sky coverage by controlling elevation and rotation independently.</li>
+      <li>Drive system for motorized pointing to track targets as the Earth rotates.</li>
+    </ul>
+
+    <h2>Testing & Validation</h2>
+    <p>
+      Prior to integrating the full signal chain, individual stages were validated on the bench using a spectrum analyzer and signal generator at 1420 MHz. This allowed verification of filter passband, LNA gain, and connector integrity before committing to a full system test on the dish.
+    </p>
+
+    <div class="placeholder-banner">
+      📎 Observation data, system diagrams, and build photos coming soon.
+    </div>
+
+  </div>
+
+  <footer>© 2025 Radin Jafari</footer>
+</body>
+</html>
