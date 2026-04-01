@@ -306,6 +306,7 @@
       text-decoration: none;
       background: var(--surface);
       border: 1px solid var(--border);
+      border-top: 2px solid var(--border);
       padding: 1.8rem;
       border-radius: 3px;
       transition: border-color 0.2s, transform 0.2s;
@@ -317,15 +318,11 @@
       border-color: var(--ink-3);
       transform: translateY(-2px);
     }
-    .project-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 2px;
-    }
-    .cat-robotics .project-card::before { background: var(--accent); }
-    .cat-radio    .project-card::before { background: var(--blue); }
-    .cat-software .project-card::before { background: var(--green); }
-    .cat-pcb      .project-card::before { background: var(--gold); }
+    .project-card::before { display: none; }
+    .cat-robotics .project-card { border-top-color: var(--accent); }
+    .cat-radio    .project-card { border-top-color: var(--blue); }
+    .cat-software .project-card { border-top-color: var(--green); }
+    .cat-pcb      .project-card { border-top-color: var(--gold); }
 
     .project-card h3 {
       font-family: var(--serif);
