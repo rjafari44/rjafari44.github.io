@@ -10,50 +10,152 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #f7f6f2; --surface: #ffffff; --ink: #1c1b18; --ink-2: #5c5a55;
-      --ink-3: #a8a6a0; --accent: #1e4d82; --border: #e0deda;
-      --mono: 'DM Mono', monospace; --serif: 'DM Serif Display', serif;
-      --sans: 'DM Sans', sans-serif; --max: 780px;
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface-2: #f0efe9;
+      --ink: #1c1b18;
+      --ink-2: #5c5a55;
+      --ink-3: #a8a6a0;
+      --accent: #1e4d82;
+      --accent-dim: rgba(30,77,130,0.08);
+      --border: #e0deda;
+      --mono: 'DM Mono', monospace;
+      --serif: 'DM Serif Display', serif;
+      --sans: 'DM Sans', sans-serif;
+      --max: 820px;
+      --code-bg: #1a1917;
+      --code-ink: #d4d0c8;
     }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
 
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 3rem; background: rgba(247,246,242,0.9); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
-    .nav-brand { font-family: var(--mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
-    .nav-back { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; transition: color 0.2s; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(247,246,242,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      font-family: var(--mono); font-size: 0.75rem;
+      font-weight: 500; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--ink); text-decoration: none;
+    }
+    .nav-back {
+      font-family: var(--mono); font-size: 0.72rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-2); text-decoration: none; transition: color 0.2s;
+    }
     .nav-back:hover { color: var(--accent); }
 
-    .project-hero { padding: 10rem 3rem 4rem; max-width: var(--max); margin: 0 auto; }
-    .project-category-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; }
-    .project-category-label::before { content: ''; display: inline-block; width: 20px; height: 2px; background: var(--accent); }
-    h1 { font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 400; line-height: 1.1; margin-bottom: 1.5rem; }
-    .project-meta { display: flex; flex-wrap: wrap; gap: 2rem; padding: 1.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
-    .meta-item label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 0.2rem; }
+    /* ---- HERO ---- */
+    .project-hero {
+      padding: 10rem 3rem 3rem;
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .project-category-label {
+      font-family: var(--mono); font-size: 0.68rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .project-category-label::before {
+      content: ''; display: inline-block;
+      width: 20px; height: 2px; background: var(--accent);
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 400; line-height: 1.08; margin-bottom: 1.5rem;
+    }
+    .project-meta {
+      display: flex; flex-wrap: wrap; gap: 2rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .meta-item label {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--ink-3); display: block; margin-bottom: 0.2rem;
+    }
     .meta-item span { font-size: 0.88rem; color: var(--ink); }
 
-    .project-body { max-width: var(--max); margin: 0 auto; padding: 0 3rem 6rem; }
-    .project-body h2 { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; margin: 2.5rem 0 0.8rem; }
-    .project-body p { font-size: 0.95rem; color: var(--ink-2); margin-bottom: 1.2rem; line-height: 1.75; }
-    .project-body ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
-    .project-body ul li { font-size: 0.92rem; color: var(--ink-2); padding-left: 1.2rem; position: relative; }
-    .project-body ul li::before { content: '—'; position: absolute; left: 0; color: var(--ink-3); font-size: 0.75rem; }
-
-    .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
-    .tag { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; padding: 0.28rem 0.7rem; border: 1px solid var(--border); color: var(--ink-2); border-radius: 2px; }
-
-    .signal-chain {
-      display: flex; align-items: center; flex-wrap: wrap;
-      gap: 0; margin: 1.5rem 0 2rem;
+    /* ---- BODY ---- */
+    .project-body {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 3rem 6rem;
     }
-    .chain-block {
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 0.8rem 1.1rem; border-radius: 2px;
-      text-align: center; flex: 1; min-width: 100px;
-    }
-    .chain-block label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 0.2rem; }
-    .chain-block span { font-size: 0.8rem; color: var(--ink); }
-    .chain-arrow { font-family: var(--mono); color: var(--ink-3); font-size: 0.9rem; padding: 0 0.4rem; flex-shrink: 0; }
 
+    .section-label {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-label::before {
+      content: ''; display: inline-block;
+      width: 14px; height: 1px; background: var(--accent);
+    }
+    h2 {
+      font-family: var(--serif); font-size: 1.65rem;
+      font-weight: 400; margin-bottom: 1rem; margin-top: 0;
+    }
+    h3 {
+      font-family: var(--mono); font-size: 0.78rem;
+      font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink);
+      margin: 2rem 0 0.75rem;
+    }
+    p {
+      font-size: 0.95rem; color: var(--ink-2);
+      margin-bottom: 1.2rem; line-height: 1.78;
+    }
+    ul {
+      list-style: none; display: flex;
+      flex-direction: column; gap: 0.45rem;
+      margin-bottom: 1.5rem;
+    }
+    ul li {
+      font-size: 0.92rem; color: var(--ink-2);
+      padding-left: 1.4rem; position: relative; line-height: 1.65;
+    }
+    ul li::before {
+      content: '—'; position: absolute; left: 0;
+      color: var(--ink-3); font-size: 0.75rem; top: 0.1rem;
+    }
+
+    /* ---- TAGS ---- */
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+    .tag {
+      font-family: var(--mono); font-size: 0.65rem;
+      letter-spacing: 0.08em; padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border); color: var(--ink-2);
+      border-radius: 2px;
+    }
+
+    /* ---- SECTION DIVIDER ---- */
+    .section-block { margin-top: 3.5rem; }
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ---- STATUS BADGE ---- */
     .status-badge {
       display: inline-flex; align-items: center; gap: 0.5rem;
       font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em;
@@ -61,18 +163,153 @@
       border: 1px solid var(--accent); padding: 0.3rem 0.8rem;
       border-radius: 2px; margin-bottom: 2rem;
     }
-    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 1.8s ease-in-out infinite; }
+    .status-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); animation: pulse 1.8s ease-in-out infinite;
+    }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-    .placeholder-banner { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 1.2rem 1.5rem; border-radius: 2px; margin: 2rem 0; font-family: var(--mono); font-size: 0.75rem; color: var(--ink-3); letter-spacing: 0.05em; }
+    /* ---- SIGNAL CHAIN ---- */
+    .signal-chain-wrapper {
+      margin: 1.5rem 0 2rem;
+      overflow-x: auto;
+    }
+    .signal-chain {
+      display: flex; align-items: stretch;
+      min-width: max-content;
+      gap: 0;
+    }
+    .chain-group {
+      display: flex; align-items: stretch;
+    }
+    .chain-block {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 0.9rem 1rem;
+      text-align: center; min-width: 110px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .chain-block label {
+      font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 0.25rem;
+    }
+    .chain-block span {
+      font-size: 0.78rem; color: var(--ink); line-height: 1.3;
+    }
+    .chain-block .chain-spec {
+      font-family: var(--mono); font-size: 0.6rem; color: var(--ink-3);
+      margin-top: 0.2rem; display: block;
+    }
+    .chain-arrow {
+      font-family: var(--mono); color: var(--ink-3); font-size: 0.85rem;
+      padding: 0 0.3rem; flex-shrink: 0;
+      display: flex; align-items: center;
+    }
+    .chain-group-label {
+      font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-3);
+      text-align: center; padding: 0.25rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+    }
 
-    footer { text-align: center; padding: 2rem 3rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); letter-spacing: 0.08em; }
+    /* Grouped box for subsystems */
+    .chain-subsystem {
+      border: 1px solid var(--border); border-radius: 2px;
+      overflow: hidden; display: flex; flex-direction: column;
+      margin: 0 0.3rem;
+    }
+    .chain-subsystem-inner {
+      display: flex; align-items: stretch;
+    }
+    .chain-subsystem .chain-block {
+      border: none; border-right: 1px solid var(--border);
+    }
+    .chain-subsystem .chain-block:last-child { border-right: none; }
+    .chain-subsystem .chain-arrow { background: var(--surface); border-top: none; border-bottom: none; }
+
+    /* ---- TABLE ---- */
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0 2rem; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem; font-family: var(--mono);
+    }
+    thead tr { border-bottom: 2px solid var(--ink); }
+    thead th {
+      text-align: left; padding: 0.5rem 0.75rem;
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-2); font-weight: 500;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 0.55rem 0.75rem; color: var(--ink-2); }
+    tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+    /* ---- CODE BLOCKS ---- */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: 6px;
+      margin: 1.5rem 0 2rem;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .code-filename {
+      font-family: var(--mono); font-size: 0.68rem;
+      color: rgba(255,255,255,0.45); letter-spacing: 0.08em;
+    }
+    .code-lang {
+      font-family: var(--mono); font-size: 0.62rem;
+      color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .code-block pre {
+      padding: 1.2rem 1.3rem; font-family: var(--mono);
+      font-size: 0.78rem; line-height: 1.7; color: var(--code-ink);
+      overflow-x: auto; tab-size: 4;
+    }
+    .kw  { color: #c792ea; }
+    .cm  { color: #546e7a; font-style: italic; }
+    .fn  { color: #82aaff; }
+    .num { color: #f78c6c; }
+    .str { color: #c3e88d; }
+
+    /* ---- PLACEHOLDER ---- */
+    .placeholder-banner {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent); padding: 1.2rem 1.5rem;
+      border-radius: 2px; margin: 2rem 0;
+      font-family: var(--mono); font-size: 0.75rem; color: var(--ink-3);
+      letter-spacing: 0.05em;
+    }
+
+    /* ---- IMAGE PLACEHOLDER ---- */
+    .image-slot {
+      width: 100%; aspect-ratio: 16/9;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 3px; margin: 1.5rem 0;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 0.5rem;
+    }
+    .image-slot svg { opacity: 0.25; }
+    .image-slot span {
+      font-family: var(--mono); font-size: 0.65rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      text-align: center; padding: 2.5rem 3rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.68rem;
+      color: var(--ink-3); letter-spacing: 0.08em;
+    }
 
     @media (max-width: 760px) {
       nav { padding: 1rem 1.5rem; }
       .project-hero, .project-body { padding-left: 1.5rem; padding-right: 1.5rem; }
-      .chain-arrow { display: none; }
-      .signal-chain { flex-direction: column; align-items: stretch; gap: 0.5rem; }
     }
   </style>
 </head>
@@ -83,17 +320,20 @@
     <a class="nav-back" href="../../index.html#projects">← Back to Projects</a>
   </nav>
 
+  <!-- ======== HERO ======== -->
   <div class="project-hero">
-    <p class="project-category-label">Radio Astronomy</p>
+    <p class="project-category-label">Radio Astronomy · Embedded Systems</p>
     <h1>21 cm Hydrogen Line<br><span style="font-style:italic;color:var(--accent)">Radio Telescope</span></h1>
     <div class="project-meta">
       <div class="meta-item"><label>Target Frequency</label><span>1420.405 MHz</span></div>
       <div class="meta-item"><label>Dish Diameter</label><span>2.2 m</span></div>
       <div class="meta-item"><label>Mounting</label><span>Altitude-Azimuth</span></div>
+      <div class="meta-item"><label>Drive</label><span>Dual VNH5019 · Joystick</span></div>
       <div class="meta-item"><label>Status</label><span>Work in Progress</span></div>
     </div>
   </div>
 
+  <!-- ======== BODY ======== -->
   <div class="project-body">
 
     <div class="status-badge">In Progress</div>
@@ -103,53 +343,339 @@
       <span class="tag">RTL-SDR</span>
       <span class="tag">1420 MHz</span>
       <span class="tag">Signal Processing</span>
-      <span class="tag">Spectrum Analysis</span>
+      <span class="tag">Image Rejection Mixer</span>
       <span class="tag">Alt-Az Mount</span>
+      <span class="tag">Arduino</span>
+      <span class="tag">C++</span>
+      <span class="tag">Motor Control</span>
+      <span class="tag">Embedded Systems</span>
     </div>
 
-    <h2>Overview</h2>
-    <p>
-      This project is a ground-up radio telescope designed to detect the 21 cm hydrogen line — a spectral emission at 1420.405 MHz produced by neutral hydrogen atoms throughout the galaxy. Observing this line is one of the most fundamental techniques in radio astronomy, and the distribution of hydrogen across the Milky Way carries direct evidence for the large-scale structure of the universe that cosmological models like the Big Bang theory describe.
-    </p>
-    <p>
-      The telescope uses a 2.2 m parabolic dish mounted on a custom altitude-azimuth system, allowing it to be pointed to any position in the sky. The project is currently in active development and has been partially validated through bench testing with a spectrum analyzer and signal generator.
-    </p>
-
-    <h2>Signal Chain</h2>
-    <div class="signal-chain">
-      <div class="chain-block"><label>Receive</label><span>2.2 m Dish</span></div>
-      <span class="chain-arrow">→</span>
-      <div class="chain-block"><label>Amplify</label><span>LNA</span></div>
-      <span class="chain-arrow">→</span>
-      <div class="chain-block"><label>Filter</label><span>1420 MHz BPF</span></div>
-      <span class="chain-arrow">→</span>
-      <div class="chain-block"><label>Digitize</label><span>RTL-SDR</span></div>
-      <span class="chain-arrow">→</span>
-      <div class="chain-block"><label>Process</label><span>Software</span></div>
+    <!-- TELESCOPE IMAGE -->
+    <img src="../../assets/radio-telescope/telescope.jpg" alt="21 cm Radio Telescope" style="width:100%;border-radius:3px;margin:0.5rem 0 1rem;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+    <div class="image-slot" style="display:none;">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      <span>Telescope photo coming soon</span>
     </div>
 
-    <p>
-      The RTL-SDR dongle acts as the analog-to-digital converter and software-defined radio receiver — it takes the conditioned RF signal from the dish and converts it into a digital stream that can be processed in software to produce a spectrum. This approach keeps the system low-cost and flexible while still being capable of resolving the narrow hydrogen line emission.
-    </p>
+    <hr class="divider">
 
-    <h2>Mechanical System</h2>
-    <ul>
-      <li>2.2 m parabolic dish providing sufficient gain to detect faint galactic hydrogen emissions.</li>
-      <li>Altitude-azimuth mount enabling full sky coverage by controlling elevation and rotation independently.</li>
-      <li>Drive system for motorized pointing to track targets as the Earth rotates.</li>
-    </ul>
-
-    <h2>Testing & Validation</h2>
-    <p>
-      Prior to integrating the full signal chain, individual stages were validated on the bench using a spectrum analyzer and signal generator at 1420 MHz. This allowed verification of filter passband, LNA gain, and connector integrity before committing to a full system test on the dish.
-    </p>
-
-    <div class="placeholder-banner">
-      📎 Observation data, system diagrams, and build photos coming soon.
+    <!-- OVERVIEW -->
+    <div class="section-block" style="margin-top:1.5rem;">
+      <p class="section-label">Overview</p>
+      <h2>Detecting galactic hydrogen from the backyard</h2>
+      <p>
+        This project is a ground-up radio telescope designed to detect the 21 cm hydrogen line — a spectral emission at 1420.405 MHz produced by neutral hydrogen atoms throughout the galaxy. Observing this line is one of the most fundamental techniques in radio astronomy, and the distribution of hydrogen across the Milky Way carries direct evidence for the large-scale structure of the universe.
+      </p>
+      <p>
+        The telescope uses a 2.2 m parabolic dish on a custom altitude-azimuth mount, pointed by a motorized drive system. The project is divided into two distinct subsystems: the RF signal chain that captures and conditions the hydrogen line signal, and the mechanical drive system that controls pointing.
+      </p>
     </div>
 
-  </div>
+    <hr class="divider">
 
-  <footer>© 2025 Radin Jafari</footer>
+    <!-- RF / ELECTRONICS -->
+    <div class="section-block">
+      <p class="section-label">01 — RF Electronics</p>
+      <h2>Signal Chain</h2>
+      <p>
+        The signal chain is a multi-stage analog receive path that amplifies, filters, and frequency-converts the faint hydrogen line emission down to a baseband signal the RTL-SDR can digitize. Each stage is chosen to maximize sensitivity and selectivity at 1420 MHz while rejecting out-of-band interference.
+      </p>
+
+      <!-- SIGNAL CHAIN DIAGRAM -->
+      <div class="signal-chain-wrapper">
+        <div class="signal-chain">
+
+          <!-- ANTENNA -->
+          <div class="chain-subsystem">
+            <div class="chain-group-label">Antenna</div>
+            <div class="chain-subsystem-inner">
+              <div class="chain-block">
+                <label>Receive</label>
+                <span>2.2 m Dish + Feed Horn</span>
+              </div>
+            </div>
+          </div>
+
+          <span class="chain-arrow">→</span>
+
+          <!-- OUTDOOR / BEFORE CABLE -->
+          <div class="chain-subsystem">
+            <div class="chain-group-label">Pre-Cable</div>
+            <div class="chain-subsystem-inner">
+              <div class="chain-block">
+                <label>Amplify</label>
+                <span>LNA</span>
+                <span class="chain-spec">+14 dB</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>Filter</label>
+                <span>BPF</span>
+                <span class="chain-spec">50 MHz BW · −2 dB</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>Amplify</label>
+                <span>LNA</span>
+                <span class="chain-spec">+14 dB</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>DC Inject</label>
+                <span>Bias Tee</span>
+                <span class="chain-spec">Transmit</span>
+              </div>
+            </div>
+          </div>
+
+          <span class="chain-arrow">→</span>
+
+          <!-- CABLE LOSS -->
+          <div class="chain-subsystem">
+            <div class="chain-group-label">Cable</div>
+            <div class="chain-subsystem-inner">
+              <div class="chain-block" style="background:var(--surface-2);">
+                <label>Loss</label>
+                <span>Coax Run</span>
+                <span class="chain-spec">−6 dB</span>
+              </div>
+            </div>
+          </div>
+
+          <span class="chain-arrow">→</span>
+
+          <!-- INDOOR RECEIVER -->
+          <div class="chain-subsystem">
+            <div class="chain-group-label">Receiver Electronics</div>
+            <div class="chain-subsystem-inner">
+              <div class="chain-block">
+                <label>DC Block</label>
+                <span>Bias Tee</span>
+                <span class="chain-spec">Receive</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>Filter</label>
+                <span>BPF</span>
+                <span class="chain-spec">50 MHz BW · −2 dB</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>Amplify</label>
+                <span>Amplifier</span>
+                <span class="chain-spec">+17 dB</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>Down-convert</label>
+                <span>IQ Mixer</span>
+                <span class="chain-spec">−12 dB · LO 1416 MHz</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>Filter</label>
+                <span>HPF + LPF</span>
+                <span class="chain-spec">9 MHz BW · −0.3 dB</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>Amplify</label>
+                <span>Amplifier</span>
+                <span class="chain-spec">+24 dB</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>Filter</label>
+                <span>LPF</span>
+                <span class="chain-spec">6 MHz BW</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>Amplify</label>
+                <span>Amplifier</span>
+                <span class="chain-spec">+24 dB</span>
+              </div>
+            </div>
+          </div>
+
+          <span class="chain-arrow">→</span>
+
+          <!-- DIGITIZE + PROCESS -->
+          <div class="chain-subsystem">
+            <div class="chain-group-label">Digital</div>
+            <div class="chain-subsystem-inner">
+              <div class="chain-block">
+                <label>Digitize</label>
+                <span>RTL-SDR</span>
+              </div>
+              <span class="chain-arrow">→</span>
+              <div class="chain-block">
+                <label>Process</label>
+                <span>Computer</span>
+                <span class="chain-spec">Spectrum / FFT</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <h3>Stage-by-Stage Breakdown</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Component</th>
+              <th>Gain / Loss</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Dish + Feed Horn</td><td>2.2 m Parabolic</td><td>—</td><td>Collects and focuses 1420 MHz emission</td></tr>
+            <tr><td>LNA 1</td><td>Low Noise Amplifier</td><td>+14 dB</td><td>First gain stage — sets system noise figure</td></tr>
+            <tr><td>BPF 1</td><td>Bandpass Filter</td><td>−2 dB</td><td>50 MHz bandwidth, rejects out-of-band RFI before 2nd amp</td></tr>
+            <tr><td>LNA 2</td><td>Low Noise Amplifier</td><td>+14 dB</td><td>Additional gain before cable loss</td></tr>
+            <tr><td>Bias Tee (TX)</td><td>Bias Tee</td><td>~0 dB</td><td>Injects DC over coax to power remote LNAs</td></tr>
+            <tr><td>Coax Run</td><td>Coaxial Cable</td><td>−6 dB</td><td>Signal loss over cable run to indoor receiver</td></tr>
+            <tr><td>Bias Tee (RX)</td><td>Bias Tee</td><td>~0 dB</td><td>Separates DC from RF at indoor receiver input</td></tr>
+            <tr><td>BPF 2</td><td>Bandpass Filter</td><td>−2 dB</td><td>50 MHz bandwidth, second stage rejection</td></tr>
+            <tr><td>Amplifier</td><td>RF Amplifier</td><td>+17 dB</td><td>Boosts signal ahead of mixer</td></tr>
+            <tr><td>IQ Mixer</td><td>Image Rejection Mixer</td><td>−12 dB</td><td>LO at 1416 MHz; mixes signal to ~4 MHz IF; I and Q outputs combined to reject image</td></tr>
+            <tr><td>IF Filter</td><td>HPF + LPF pair</td><td>−0.3 dB</td><td>9 MHz bandwidth around IF; defines usable observation band</td></tr>
+            <tr><td>Amplifier</td><td>IF Amplifier</td><td>+24 dB</td><td>First IF gain stage</td></tr>
+            <tr><td>LPF</td><td>Low Pass Filter</td><td>~0 dB</td><td>6 MHz cut-off; prevents aliasing into RTL-SDR</td></tr>
+            <tr><td>Amplifier</td><td>IF Amplifier</td><td>+24 dB</td><td>Final gain stage ahead of digitizer</td></tr>
+            <tr><td>RTL-SDR</td><td>SDR Receiver</td><td>—</td><td>Digitizes IF; software-defined radio via USB</td></tr>
+            <tr><td>Software</td><td>PC / FFT</td><td>—</td><td>Spectrum analysis, hydrogen line detection</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>IQ Mixer & the Local Oscillator</h3>
+      <p>
+        The image rejection mixer is the heart of the receiver's frequency conversion. A local oscillator (LO) running at 1416 MHz is mixed with the incoming 1420 MHz signal, which mathematically produces sum and difference frequencies — the difference lands the hydrogen line at roughly 4 MHz, a frequency the RTL-SDR can easily digitize. An "image rejection" mixer generates two copies of the mixed signal 90° apart in phase (the I and Q channels), then combines them so that signals at the image frequency — which would otherwise fold in on top of the desired signal — cancel out. This gives a clean, interference-free baseband that represents only the sky around 1420 MHz.
+      </p>
+
+      <h3>Testing & Validation</h3>
+      <p>
+        Prior to integrating the full signal chain, individual stages were validated on the bench using a spectrum analyzer and signal generator at 1420 MHz. This allowed verification of filter passband, LNA gain, and connector integrity before committing to a full system test on the dish.
+      </p>
+
+      <div class="placeholder-banner">
+        📎 Observation data, spectrum plots, and system diagrams coming soon.
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- MECHANICAL -->
+    <div class="section-block">
+      <p class="section-label">02 — Mechanical</p>
+      <h2>Altitude-Azimuth Mount</h2>
+      <p>
+        The dish is mounted on a custom altitude-azimuth (alt-az) structure that provides independent control of elevation (altitude) and horizontal rotation (azimuth), enabling the telescope to be pointed at any position in the sky. The drive system is motorized, allowing the mount to compensate for Earth's rotation and track targets over time.
+      </p>
+      <ul>
+        <li>2.2 m parabolic dish providing sufficient gain to resolve faint galactic hydrogen emission.</li>
+        <li>Altitude axis driven by a linear actuator controlled via joystick input — elevation is set and held by the actuator's physical stroke.</li>
+        <li>Azimuth axis allows full 360° rotation for sky coverage.</li>
+        <li>Drive electronics use dual VNH5019 motor driver ICs with current sensing for stall detection and fault protection.</li>
+      </ul>
+
+      <div class="placeholder-banner">
+        📎 Mount assembly photos and mechanical drawings coming soon.
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- MOTOR CONTROL SOFTWARE -->
+    <div class="section-block">
+      <p class="section-label">03 — Motor Control</p>
+      <h2>Altitude Drive Firmware</h2>
+      <p>
+        The altitude axis is driven by a linear actuator controlled from an Arduino via a joystick. The firmware maps joystick deflection to motor PWM while implementing a deadzone at center, driver fault detection via the VNH5019's EN/DIAG pin, and a stall-current latch that cuts power if sustained overcurrent is detected and requires the operator to return the joystick to center before re-engaging.
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">altitude-motors.ino</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre><span class="cm">// VNH5019 pulls EN/DIAG LOW on a driver fault — check before anything else</span>
+<span class="kw">if</span> (digitalRead(M1_EN) == LOW || digitalRead(M2_EN) == LOW) {
+    <span class="fn">stopMotors</span>();
+    Serial.<span class="fn">println</span>(<span class="str">"DRIVER FAULT!"</span>);
+    <span class="kw">return</span>;
+}
+
+<span class="cm">// check both motors for sustained overcurrent</span>
+<span class="kw">if</span> (!stalled &&
+    (<span class="fn">checkStall</span>(M1_CS, stallStartM1) ||
+     <span class="fn">checkStall</span>(M2_CS, stallStartM2))) {
+
+    Serial.<span class="fn">println</span>(<span class="str">"STALL CURRENT!"</span>);
+    <span class="fn">stopMotors</span>();
+    stalled = <span class="kw">true</span>; <span class="cm">// latch — operator must center joystick to re-engage</span>
+}
+
+<span class="cm">// map joystick deflection to PWM with deadzone at center</span>
+<span class="kw">if</span> (abs(delta) < DEADZONE)      { <span class="fn">stopMotors</span>(); }
+<span class="kw">else if</span> (delta > <span class="num">0</span>)              { pwmValue = <span class="fn">map</span>(delta,  DEADZONE, <span class="num">512</span>, <span class="num">0</span>, MAXSPEED); <span class="fn">forwardMotors</span>(pwmValue); }
+<span class="kw">else</span>                             { pwmValue = <span class="fn">map</span>(-delta, DEADZONE, <span class="num">512</span>, <span class="num">0</span>, MAXSPEED); <span class="fn">reverseMotors</span>(pwmValue); }</pre>
+      </div>
+
+      <h3>Control Logic</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Condition</th>
+              <th>Action</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>EN/DIAG LOW</td><td>Stop + fault message</td><td>VNH5019 hardware fault detected</td></tr>
+            <tr><td>Stall current detected</td><td>Stop + latch stall</td><td>Sustained overcurrent on M1 or M2 CS pin</td></tr>
+            <tr><td>Stalled, joystick at center</td><td>Clear stall latch</td><td>Operator must return to center to re-arm</td></tr>
+            <tr><td>|delta| &lt; DEADZONE</td><td>Stop</td><td>Prevents drift at joystick center</td></tr>
+            <tr><td>delta &gt; 0</td><td>Forward at mapped PWM</td><td>Raises altitude axis</td></tr>
+            <tr><td>delta &lt; 0</td><td>Reverse at mapped PWM</td><td>Lowers altitude axis</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Safety Features</h3>
+      <ul>
+        <li>Driver fault detection reads the VNH5019 EN/DIAG open-drain pin — held HIGH by INPUT_PULLUP and pulled LOW by the IC on any over-temperature or under-voltage event.</li>
+        <li>Stall detection monitors the current sense (CS) pin on both motor channels; sustained high current triggers a latched stop to protect the actuator and driver.</li>
+        <li>Stall latch requires the joystick to return to center before the drive can be re-engaged, preventing an accidental re-start into an already-stalled load.</li>
+        <li>Configurable DEADZONE constant prevents the actuator from creeping due to joystick center offset.</li>
+        <li>MAXSPEED constant caps PWM output to limit mechanical stress on the linear actuator.</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- SOURCE -->
+    <div class="section-block">
+      <p class="section-label">Source</p>
+      <h2>View on GitHub</h2>
+      <a href="https://github.com/rjafari44/Radio-Telescope-21cm" target="_blank"
+        style="display:inline-flex;align-items:center;gap:0.6rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink);text-decoration:none;border:1px solid var(--border);padding:0.75rem 1.25rem;border-radius:3px;transition:border-color 0.2s,color 0.2s;"
+        onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+        onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 0 1 3.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.652.242 2.873.118 3.176.77.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/rjafari44/Radio-Telescope-21cm
+      </a>
+    </div>
+
+  </div><!-- /project-body -->
+
+  <footer>© 2026 Radin Jafari</footer>
+
 </body>
 </html>
