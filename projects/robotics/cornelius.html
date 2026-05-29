@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cornelius — Autonomous Arduino Rover — Radin Jafari</title>
+  <title>Cornelius — Autonomous &amp; Wireless Rover — Radin Jafari</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
@@ -228,11 +228,11 @@
   <!-- ======== HERO ======== -->
   <div class="project-hero">
     <p class="project-category-label">Robotics · Embedded Systems</p>
-    <h1>Cornelius<br><span style="font-style:italic;color:var(--accent)">Autonomous Obstacle-Avoiding Rover</span></h1>
+    <h1>Cornelius<br><span style="font-style:italic;color:var(--accent)">Autonomous &amp; Wireless ESP32 Rover</span></h1>
     <div class="project-meta">
-      <div class="meta-item"><label>Platform</label><span>Arduino Nano</span></div>
+      <div class="meta-item"><label>Platform</label><span>ESP32-C3 (Rover + Controller)</span></div>
       <div class="meta-item"><label>Type</label><span>Four Wheeled Robot</span></div>
-      <div class="meta-item"><label>Control</label><span>Autonomous</span></div>
+      <div class="meta-item"><label>Control</label><span>Autonomous &amp; Manual (ESP-NOW)</span></div>
       <div class="meta-item"><label>Drive</label><span>2WD · TT Gear Motors</span></div>
       <div class="meta-item"><label>Scope</label><span>Solo Project</span></div>
     </div>
@@ -242,11 +242,13 @@
   <div class="project-body">
 
     <div class="tag-row">
-      <span class="tag">Arduino</span>
+      <span class="tag">ESP32</span>
       <span class="tag">C++</span>
+      <span class="tag">ESP-NOW</span>
       <span class="tag">Ultrasonic Sensor</span>
       <span class="tag">Servo</span>
       <span class="tag">Autonomous Navigation</span>
+      <span class="tag">Manual Control</span>
       <span class="tag">Motor Control</span>
       <span class="tag">Embedded Systems</span>
       <span class="tag">3D Printing</span>
@@ -255,12 +257,12 @@
     <!-- OVERVIEW -->
     <div class="section-block" style="margin-top:1.5rem;">
       <p class="section-label">Overview</p>
-      <h2>A self-navigating rover with no remote control</h2>
+      <h2>A rover that drives itself — or you can take the wheel</h2>
       <p>
-        Cornelius is a self-navigating wheeled rover built from scratch on an Arduino Nano. It uses an HC-SR04 ultrasonic sensor mounted on a micro servo to scan for obstacles in real time and autonomously reroute — no remote control, no pre-programmed paths. The robot makes its own decisions.
+        Cornelius is a wheeled rover built from scratch on two ESP32-C3 boards communicating over ESP-NOW. The rover supports both autonomous obstacle avoidance and real-time manual control via a custom wireless controller with an analog joystick. A push button on the controller toggles between modes on the fly.
       </p>
       <p>
-        The chassis and wheels are custom 3D printed in PLA. The project spans mechanical design, electrical wiring, and embedded C++ programming — all done solo.
+        In autonomous mode, an HC-SR04 ultrasonic sensor mounted on a micro servo scans for obstacles and reroutes without any input. In manual mode, joystick deflection is smoothed with a rolling average and mapped proportionally to motor speed. The chassis and wheels are custom 3D printed in PLA. The project spans mechanical design, electrical wiring, and embedded C++ programming — all done solo.
       </p>
     </div>
 
@@ -273,17 +275,17 @@
       <p class="section-label">01 — Mechanical</p>
       <h2>Chassis & Assembly</h2>
       <p>
-        The chassis is custom-designed and printed in PLA. The wheels are inspired by a design from Prof. Wolken at Irvine Valley College. The chassis includes ziptie routing holes for motors and wiring, a servo bracket, and mounting tabs for the breadboard, motor driver, and battery holder.
+        The chassis is custom-designed and printed in PLA. The wheels are inspired by a design from Prof. Wolken at Irvine Valley College. The chassis includes ziptie routing holes for motors and wiring, a servo bracket, and mounting tabs for the motor driver and battery holder.
       </p>
       <ul>
-        <li>Front wheels mounted to TT motors with zipties; rear wheels attached via nails through a mounting bracket.</li>
-        <li>Servo bracket is slightly loose — tape or a small shim keeps it secure.</li>
-        <li>Ultrasonic sensor bracket sourced online and reinforced with screws and washers.</li>
-        <li>MG90 metal gear servo used — an SG90 works fine and is recommended for this application.</li>
+        <li>Front wheels mounted to TT motors with zipties; rear wheels attached via bolts through a printed mount bracket and two bearings each.</li>
+        <li>Servo bracket kept secure with electrical tape for fitment — an SG90 plastic gear servo works fine and is recommended over a metal gear MG90.</li>
+        <li>Ultrasonic sensor bracket sourced online and reinforced with screws and washers for stability.</li>
+        <li>Some wheel wobbling may occur, especially during extended operation.</li>
       </ul>
     </div>
 
-    <img src="../../assets/cornelius/rover-assmebly.png" alt="Onshape Assembly" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+    <img src="../../assets/cornelius/rover-assembly-new.png" alt="Onshape Assembly" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
 
     <hr class="divider">
 
@@ -292,16 +294,18 @@
       <p class="section-label">02 — Electrical</p>
       <h2>Power & Wiring</h2>
       <p>
-        Powered by two 18650 Li-ion batteries in series (~8 V total). The Arduino Nano and L298N motor driver have built-in 5 V regulators which power the HC-SR04 and servo. A 470 µF capacitor across the power rail smooths voltage spikes from motor switching.
+        The rover is powered by two 18650 Li-ion batteries in series (~8 V total). A LM2596 adjustable buck converter steps voltage down to 5 V for the ESP32 and servo. The L298N motor driver handles motor switching; its voltage drop brings the TT motors into their safe 3–6 V operating range.
       </p>
       <ul>
-        <li>TT motors run at 3–6 V — voltage drop across the L298N brings them into safe range.</li>
-        <li>Total current draw kept well under 2 A.</li>
+        <li>ESP32 and SG90 servo both powered from the buck converter at 5 V.</li>
+        <li>Three 100 µF electrolytic capacitors, three 0.1 µF ceramic capacitors, and one 10 µF ceramic capacitor placed across the power rail and GND to smooth voltage spikes from motor switching.</li>
+        <li>Total current draw kept under 2 A.</li>
         <li>Dupont jumper wires used throughout — solid connections are critical to avoid intermittent failures.</li>
+        <li>The controller uses a custom PCB for clean, compact wiring. PCB design files are in a <a href="https://github.com/rjafari44/ESP32-Remote-Control-PCB" target="_blank" style="color:var(--accent);text-decoration:none;">separate repository</a>.</li>
       </ul>
     </div>
 
-    <img src="../../assets/cornelius/schematic.png" alt="Circuit Schematic" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+    <img src="../../assets/cornelius/new-schematic.png" alt="Circuit Schematic" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
 
     <hr class="divider">
 
@@ -310,33 +314,90 @@
       <p class="section-label">03 — Software</p>
       <h2>How It Works</h2>
       <p>
-        The main loop continuously reads distance from the ultrasonic sensor. If the path is clear it drives forward. When an obstacle is detected within 20 cm, it stops, backs up briefly, then sweeps the servo left and right to measure clearance on both sides before turning toward the more open direction.
+        The rover and controller each run on separate ESP32-C3 boards and communicate wirelessly over <strong style="font-weight:500;color:var(--ink);">ESP-NOW</strong> on channel 1. The controller sends a <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">ControlData</code> packet every 30 ms containing joystick X/Y values and an autonomous mode flag. The rover acts on each packet immediately, or stops all motors if no packet arrives within the 500 ms failsafe window.
       </p>
 
       <div class="code-block">
         <div class="code-header">
-          <span class="code-filename">Cornelius-Autonomous-Rover.ino</span>
+          <span class="code-filename">common.h</span>
           <span class="code-lang">C++</span>
         </div>
-        <pre><span class="cm">// Run obstacle avoidance only if an obstacle is detected</span>
-<span class="kw">if</span> (obstacleDetected) {
+        <pre><span class="kw">typedef struct</span> {
+  <span class="kw">int</span>  x;
+  <span class="kw">int</span>  y;
+  <span class="kw">bool</span> autonomous;
+} ControlData;</pre>
+      </div>
+
+      <h3>Failsafe</h3>
+      <p>If no packet is received within <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">FAILSAFE_MS</code> (500 ms), all motors stop until communication resumes:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">rover.ino</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre><span class="kw">if</span> (!hasPacket || millis() - lastPacketTime > FAILSAFE_MS) {
   <span class="fn">stopMotors</span>();
-  
-
-  delay(<span class="num">200</span>);
-  <span class="fn">moveBackward</span>();
-  delay(<span class="num">300</span>);
-  <span class="fn">stopMotors</span>();
-
-  leftDist  = <span class="fn">lookLeft</span>();
-  rightDist = <span class="fn">lookRight</span>();
-
-  <span class="kw">if</span> (leftDist > rightDist) <span class="fn">turnLeft</span>();
-  <span class="kw">else</span>                      <span class="fn">turnRight</span>();
-
-  delay(<span class="num">400</span>);
-  <span class="fn">stopMotors</span>();
+  <span class="kw">return</span>;
 }</pre>
+      </div>
+
+      <h3>Mode Switching</h3>
+      <p>A button on the controller toggles between manual and autonomous mode. Both LEDs lighting simultaneously indicates autonomous mode is active. The <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">autonomous</code> flag is packed into every ESP-NOW transmission:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">control.cpp</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre>autonomousMode = rx.autonomous;
+
+<span class="kw">if</span> (autonomousMode) {
+  <span class="fn">autonomousDrive</span>();
+} <span class="kw">else</span> {
+  <span class="fn">manualControl</span>(rx.x, rx.y);
+}</pre>
+      </div>
+
+      <h3>Manual Control</h3>
+      <p>Joystick input is smoothed with a rolling average and mapped through <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">proportional()</code> to correct for the off-center neutral point. On the rover, the dominant axis wins — greater vertical deflection drives forward/backward; greater horizontal deflection turns:</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">control.cpp</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre>lastX = (lastX * <span class="num">3</span> + x) / <span class="num">4</span>;
+lastY = (lastY * <span class="num">3</span> + y) / <span class="num">4</span>;
+
+<span class="kw">if</span> (abs(y) >= abs(x)) {
+  <span class="cm">// forward / backward</span>
+} <span class="kw">else</span> {
+  <span class="cm">// turn left / right</span>
+}</pre>
+      </div>
+
+      <h3>Autonomous Drive</h3>
+      <p>
+        The rover drives forward freely until an obstacle is detected within 20 cm. It also performs a proactive sweep every 5 seconds on a clear path, nudging toward whichever side has more room. When blocked, it stops, backs up, then scans both directions before turning:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">control.cpp</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre><span class="kw">int</span> leftDist  = <span class="fn">lookLeft</span>();
+<span class="kw">int</span> rightDist = <span class="fn">lookRight</span>();
+
+<span class="kw">if</span> (leftDist < OBSTACLE_LIMIT && rightDist < OBSTACLE_LIMIT) {
+  <span class="fn">moveBackward</span>();   <span class="cm">// both blocked — keep reversing</span>
+  <span class="kw">return</span>;
+}
+
+<span class="kw">if</span> (leftDist > rightDist) { <span class="fn">turnLeft</span>(); }
+<span class="kw">else</span>                       { <span class="fn">turnRight</span>(); }</pre>
       </div>
 
       <h3>Movement Logic</h3>
@@ -348,11 +409,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Forward</td><td>1</td><td>0</td><td>1</td><td>0</td><td>PWM</td><td>PWM</td></tr>
-            <tr><td>Backward</td><td>0</td><td>1</td><td>0</td><td>1</td><td>PWM</td><td>PWM</td></tr>
-            <tr><td>Turn Left</td><td>0</td><td>1</td><td>1</td><td>0</td><td>PWM</td><td>PWM</td></tr>
-            <tr><td>Turn Right</td><td>1</td><td>0</td><td>0</td><td>1</td><td>PWM</td><td>PWM</td></tr>
-            <tr><td>Stop</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>Forward</td><td>0</td><td>1</td><td>0</td><td>1</td><td>PWM</td><td>PWM</td></tr>
+            <tr><td>Backward</td><td>1</td><td>0</td><td>1</td><td>0</td><td>PWM</td><td>PWM</td></tr>
+            <tr><td>Turn Left</td><td>1</td><td>0</td><td>0</td><td>1</td><td>PWM</td><td>PWM</td></tr>
+            <tr><td>Turn Right</td><td>0</td><td>1</td><td>1</td><td>0</td><td>PWM</td><td>PWM</td></tr>
+            <tr><td>Stop</td><td>—</td><td>—</td><td>—</td><td>—</td><td>0</td><td>0</td></tr>
           </tbody>
         </table>
       </div>
@@ -365,7 +426,7 @@
     <p class="section-label">04 — Demo</p>
     <h2>In Action</h2>
     
-    <video src="../../assets/" controls style="width:50%; display:block; margin:0 auto; border-radius:3px;"></video>
+    <video src="../../assets/cornelius/action.mp4" controls style="width:50%; display:block; margin:0 auto; border-radius:3px;"></video>
 
     </div>
 
@@ -376,7 +437,7 @@
       <p class="section-label">05 — Reflection</p>
       <h2>What I Learned</h2>
       <p>
-        This project sharpened my ability to write clean embedded C++ under tight hardware constraints, think through edge cases in autonomous behavior, and debug physical systems where software issues and mechanical issues can look identical. Structuring the code across multiple <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">.cpp</code> files with a shared header was also good practice for keeping embedded projects organized.
+        This project sharpened my ability to write clean embedded C++ under tight hardware constraints, think through edge cases in both autonomous and manual behavior, and debug physical systems where software issues and mechanical issues can look identical. Working with ESP-NOW for the first time — handling packet structs, MAC addressing, failsafe timing, and two independent firmware codebases that have to agree on every detail — pushed my embedded systems thinking significantly further than a single-board project would have. Structuring each codebase across multiple <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">.cpp</code> files with a shared header also reinforced good habits for keeping embedded projects organized and maintainable.
       </p>
     </div>
 
