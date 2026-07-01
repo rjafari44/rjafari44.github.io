@@ -92,7 +92,7 @@
     <div class="project-meta">
       <div class="meta-item"><label>Language</label><span>C++</span></div>
       <div class="meta-item"><label>Domain</label><span>Application Development</span></div>
-      <div class="meta-item"><label>Interface</label><span>CLI (Qt GUI In Progress)</span></div>
+      <div class="meta-item"><label>Interface</label><span>CLI & Qt6 GUI</span></div>
       <div class="meta-item"><label>Scope</label><span>Solo Project</span></div>
     </div>
   </div>
@@ -102,11 +102,12 @@
     <div class="tag-row">
       <span class="tag">C++</span>
       <span class="tag">CLI</span>
+      <span class="tag">Qt6</span>
+      <span class="tag">CMake</span>
       <span class="tag">Input Validation</span>
       <span class="tag">Structs</span>
-      <span class="tag">Enums</span>
-      <span class="tag">Data Structures</span>
-      <span class="tag">Qt (In Progress)</span>
+      <span class="tag">Signals & Slots</span>
+      <span class="tag">GUI Design</span>
     </div>
 
     <!-- OVERVIEW -->
@@ -114,18 +115,25 @@
       <p class="section-label">Overview</p>
       <h2>A CLI inventory tracker for precious metal holdings</h2>
       <p>
-        A command-line inventory management system for tracking precious metal holdings, built in C++ with object-oriented design, input validation, and a clean two-level menu interface. A Qt-based GUI is currently in development.
+        A C++ inventory management system for tracking precious metal holdings, available as both a command-line program and a Qt6 desktop GUI. Both versions share the same validation rules and data model, just with different front ends.
       </p>
       <p>
-        This program lets a user manage a personal inventory of five precious metals — Platinum, Gold, Diamond, Silver, and Copper — through a straightforward CLI. Each metal has a maximum storage capacity of 100 kg, and users can deposit or withdraw fractional amounts at any time. A balance summary screen shows all five holdings at a glance.
+        The program lets a user manage a personal inventory of five precious metals — Platinum, Gold, Diamond, Silver, and Copper. Each metal has a maximum storage capacity of 100 kg, and users can deposit or withdraw fractional amounts at any time. A balance summary shows all five holdings at a glance.
       </p>
       <p>
-        I built this project as I was getting back into C++ after a break. The goal was to practice clean code organization across multiple files, struct-based data modeling, and robust input validation.
+        I built this project as I was getting back into C++ after a break, then later ported it to a Qt GUI to practice signal/slot driven design and CMake. The goal throughout was clean code organization across multiple files, struct-based data modeling, and robust input validation.
       </p>
     </div>
 
-    <img src="../../assets/inventory-system/cli-opening.png" alt="CLI Intro Screenshot" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
-    <img src="../../assets/inventory-system/sample-balance.png" alt="CLI Sample Balance" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
+    <p class="section-label" style="margin-top:1.5rem;">CLI</p>
+    <img src="../../assets/inventory-system/cli-opening-menu.png" alt="CLI Intro Screenshot" style="width:80%;border-radius:3px;margin:0 0 1.5rem;display:block;border:1px solid var(--border);" />
+    <img src="../../assets/inventory-system/cli-sample-balance.png" alt="CLI Sample Balance" style="width:80%;border-radius:3px;margin:0 0 1.5rem;display:block;border:1px solid var(--border);" />
+
+    <p class="section-label">GUI</p>
+    <div style="display:flex;gap:1rem;margin-bottom:1.5rem;">
+      <img src="../../assets/inventory-system/gui-main-menu.png" alt="GUI Main Menu Screenshot" style="width:40%;border-radius:3px;display:block;border:1px solid var(--border);" />
+      <img src="../../assets/inventory-system/gui-transaction.png" alt="GUI Transaction Screenshot" style="width:40%;border-radius:3px;display:block;border:1px solid var(--border);" />
+    </div>
 
     <hr class="divider">
 
@@ -229,6 +237,22 @@
   <span class="kw">return</span> (withdrawAmt > <span class="num">0</span>) &amp;&amp; (withdrawAmt &lt;= currentBalance);
 }</pre>
       </div>
+      <h3>Qt GUI Port</h3>
+      <p>
+        The same struct and validation logic from the CLI version drives a Qt6 desktop GUI, built with a <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">QStackedWidget</code> swapping between a main menu page and a shared transaction page. Buttons replace the numbered menu, and a <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">QLineEdit</code> with placeholder text and a numeric validator replaces <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">cin</code>, rejecting bad characters before they're even typed.
+      </p>
+      <div class="code-block">
+        <div class="code-common">
+          <span class="code-filename">display.cpp</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre>amountLineEdit = <span class="kw">new</span> QLineEdit;
+amountLineEdit-&gt;<span class="fn">setPlaceholderText</span>(<span class="str">"0.00"</span>);
+
+QDoubleValidator *amountValidator =
+    <span class="kw">new</span> QDoubleValidator(<span class="num">0.0</span>, <span class="num">9999.99</span>, <span class="num">2</span>, amountLineEdit);
+amountLineEdit-&gt;<span class="fn">setValidator</span>(amountValidator);</pre>
+      </div>
     </div>
 
     <hr class="divider">
@@ -244,7 +268,7 @@
         I also reinforced the pattern of guarding every <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">cin</code> read with a fail-state check. It is easy to skip when prototyping, but user input is unpredictable and a single unguarded read can put the stream into a broken state that silently corrupts subsequent reads.
       </p>
       <p>
-        If I were to extend this, I would add file persistence so balances survive between sessions, and replace the raw <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">float</code> fields with a map from a metal enum to balance — making it straightforward to add new metals without touching the struct definition or the switch statement.
+        If I were to extend this, I would add file persistence so balances survive between sessions, and replace the raw <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">float</code> fields with a map from a metal enum to balance, making it easier to add new metals without touching the struct or the switch statement. Porting to Qt also made it obvious how much of "the program" was really just I/O dressed up as logic, since the actual validation rules carried over completely unchanged.
       </p>
     </div>
 
