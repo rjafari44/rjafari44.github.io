@@ -380,10 +380,10 @@
       <p class="section-label">Overview</p>
       <h2>A 6-DOF arm with dual-mode control</h2>
       <p>
-        Epione is a 6-degree-of-freedom desktop robotic arm built on the open-source <strong>Arctos</strong> platform — a community-designed arm known for its printable structure and accessible electronics. The project extends the base platform with a custom end effector, a fully hand-wired electrical architecture, and two independent software control modes: a joystick-driven manual mode for precise positioning, and a vision-based gesture control system using MediaPipe hand tracking.
+        Epione is a 6-degree-of-freedom desktop robotic arm built on the open-source <strong>Arctos</strong> platform, a community-designed arm known for its printable structure and accessible electronics. The project extends the base platform with a custom end effector, a fully hand-wired electrical architecture, and two independent software control modes: a joystick-driven manual mode for precise positioning, and a vision-based gesture control system using MediaPipe hand tracking.
       </p>
       <p>
-        The name Epione comes from Greek mythology — the goddess of the soothing of pain, consort of Asclepius which fits the mission of creating something for the concept of helping people. Built and integrated from the ground up as a collaborative university project.
+        The name Epione comes from Greek mythology, the goddess of the soothing of pain, consort of Asclepius which fits the mission of creating something for the concept of helping people. Built and integrated from the ground up as a collaborative university project.
       </p>
     </div>
 
@@ -397,7 +397,7 @@
       <p class="section-label">01 — Mechanical</p>
       <h2>Structure & End Effector</h2>
       <p>
-        All structural components were 3D printed in PLA+ with settings tuned for both rigidity and print reliability. Assembly was more involved than anticipated — provided instructions had gaps and skipped steps, so the CAD STEP file and video references were used extensively throughout. Cover plates were intentionally omitted to maintain continuous access to wiring during development and troubleshooting. Lubricant was applied to all gear interfaces to prevent binding.
+        All structural components were 3D printed in PLA+ with settings tuned for both rigidity and print reliability. Assembly was more involved than anticipated: provided instructions had gaps and skipped steps, so the CAD STEP file and video references were used extensively throughout. Cover plates were intentionally omitted to maintain continuous access to wiring during development and troubleshooting. Lubricant was applied to all gear interfaces to prevent binding.
       </p>
 
       <h3>Custom End Effector</h3>
@@ -415,15 +415,15 @@
       <p class="section-label">02 — Electrical</p>
       <h2>Wiring Architecture</h2>
       <p>
-        The electrical system was implemented with flexibility in mind — specific pin mappings are not enforced since different builds may require different configurations. Two CNC motor shields stacked on an Arduino Mega provide eight motor ports total, six of which drive the arm's stepper motors. The servo is powered separately through a buck converter for regulated voltage.
+        The electrical system was implemented with flexibility in mind: specific pin mappings are not enforced since different builds may require different configurations. Two CNC motor shields stacked on an Arduino Mega provide eight motor ports total, six of which drive the arm's stepper motors. The servo is powered separately through a buck converter for regulated voltage.
       </p>
 
       <h3>Limit Switches</h3>
       <p>
-        The original Arctos design includes magnetically activated limit switches. These were intentionally omitted due to wiring complexity, observed unreliability, and added assembly overhead. The system operates open-loop — no encoder feedback or closed-loop position verification. Safe operation relies on slow motor speeds and manual visual checks.
+        The original Arctos design includes magnetically activated limit switches. These were intentionally omitted due to wiring complexity, observed unreliability, and added assembly overhead. The system operates open-loop, no encoder feedback or closed-loop position verification. Safe operation relies on slow motor speeds and manual visual checks.
       </p>
 
-      <p>The schematic below is a simplified version of the official Arctos electrical diagram, trimmed to only the necessary pins. The gesture control mode uses an identical wiring layout — the joystick remains connected but is simply unused.</p>
+      <p>The schematic below is a simplified version of the official Arctos electrical diagram, trimmed to only the necessary pins. The gesture control mode uses an identical wiring layout, the joystick remains connected but is simply unused.</p>
 
       <img src="../../assets/epione/epione-schematic.png" alt="electrical schematic" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
     </div>
@@ -435,7 +435,7 @@
       <p class="section-label">03 — Programming</p>
       <h2>Dual-Mode Control Software</h2>
       <p>
-        The software stack spans both Arduino (C++) and Python, implementing two entirely independent control modes. The shared header and motor abstraction layer keeps firmware clean and mode-agnostic. Each mode is uploaded and run independently — no switching at runtime.
+        The software stack spans both Arduino (C++) and Python, implementing two entirely independent control modes. The shared header and motor abstraction layer keeps firmware clean and mode-agnostic. Each mode is uploaded and run independently, no switching at runtime.
       </p>
 
       <!-- moveMotors -->
@@ -455,7 +455,7 @@
   <span class="tp">int</span> scaledStep = STEP_SCALE * dir;
 
   <span class="kw">switch</span> (currentMode) {
-    <span class="kw">case</span> <span class="num">1</span>: <span class="cm">// servo — end effector</span>
+    <span class="kw">case</span> <span class="num">1</span>: <span class="cm">// servo, end effector</span>
       servoPosition += dir;
       servoPosition = constrain(servoPosition, <span class="num">0</span>, <span class="num">180</span>);
       motor7.write(servoPosition);
@@ -468,7 +468,7 @@
       motors[<span class="num">0</span>].moveTo(motors[<span class="num">0</span>].currentPosition() + scaledStep);
       motors[<span class="num">3</span>].moveTo(motors[<span class="num">3</span>].currentPosition() - scaledStep);
       <span class="kw">break</span>;
-    <span class="kw">case</span> <span class="num">4</span>: <span class="cm">// base rotation — motor 6</span>
+    <span class="kw">case</span> <span class="num">4</span>: <span class="cm">// base rotation, motor 6</span>
       motors[<span class="num">5</span>].setMaxSpeed(<span class="num">400</span>);
       motors[<span class="num">5</span>].setAcceleration(<span class="num">200</span>);
       motors[<span class="num">5</span>].moveTo(motors[<span class="num">5</span>].currentPosition() + scaledStep);
@@ -497,7 +497,7 @@
       <!-- MANUAL MODE -->
       <h3>Mode A — Manual Joystick Control</h3>
       <p>
-        The manual firmware uses a joystick (VRx axis + button) alongside Serial Monitor input for motor selection. The joystick button cycles through 7 modes; the Serial port accepts characters <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">1–7</code> for direct selection. Servo control is velocity-based — joystick deflection maps to a rotation speed rather than a position, allowing proportional control. Stepper movement uses the joystick magnitude scaled to step size.
+        The manual firmware uses a joystick (VRx axis + button) alongside Serial Monitor input for motor selection. The joystick button cycles through 7 modes; the Serial port accepts characters <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">1 to 7</code> for direct selection. Servo control is velocity-based: joystick deflection maps to a rotation speed rather than a position, allowing proportional control. Stepper movement uses the joystick magnitude scaled to step size.
       </p>
 
       <div class="table-wrap">
@@ -510,7 +510,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>1</td><td>Servo (motor 7)</td><td>End effector — velocity-based, clamped 0–180°</td></tr>
+            <tr><td>1</td><td>Servo (motor 7)</td><td>End effector, velocity-based, clamped 0 to 180°</td></tr>
             <tr><td>2</td><td>Motors 1 + 4</td><td>Opposite movement</td></tr>
             <tr><td>3</td><td>Motors 1 + 4</td><td>Together (opposing directions)</td></tr>
             <tr><td>4</td><td>Motor 6</td><td>Base rotation</td></tr>
@@ -579,10 +579,10 @@
       <!-- GESTURE MODE -->
       <h3>Mode B — Vision-Based Gesture Control</h3>
       <p>
-        The gesture control pipeline runs entirely in Python using MediaPipe for real-time hand landmark detection. A state machine governs the interaction: the user first holds a fist for 5 seconds to enter Selection Mode, then holds up 1–5 fingers to choose a motor. After a 2-second activation countdown, single and double finger gestures drive the selected motor forward or backward. A fist held for 5 seconds at any time resets to selection. The back of the hand must face the camera for stable detection; left-hand tracking was found to be unreliable.
+        The gesture control pipeline runs entirely in Python using MediaPipe for real-time hand landmark detection. A state machine governs the interaction: the user first holds a fist for 5 seconds to enter Selection Mode, then holds up 1 to 5 fingers to choose a motor. After a 2-second activation countdown, single and double finger gestures drive the selected motor forward or backward. A fist held for 5 seconds at any time resets to selection. The back of the hand must face the camera for stable detection; left-hand tracking was found to be unreliable.
       </p>
       <p>
-        Gesture stability is enforced via a rolling buffer — a gesture must be consistent across 8 consecutive frames before being recognized, eliminating false triggers from hand movement.
+        Gesture stability is enforced via a rolling buffer, a gesture must be consistent across 8 consecutive frames before being recognized, eliminating false triggers from hand movement.
       </p>
 
       <div class="table-wrap">
@@ -596,7 +596,7 @@
           </thead>
           <tbody>
             <tr><td>✊ Fist</td><td>5 seconds</td><td>Enter / return to Selection Mode</td></tr>
-            <tr><td>1–5 fingers</td><td>5 seconds</td><td>Select motor 1–5</td></tr>
+            <tr><td>1 to 5 fingers</td><td>5 seconds</td><td>Select motor 1 to 5</td></tr>
             <tr><td>☝ 1 finger</td><td>Continuous</td><td>Move selected motor forward</td></tr>
             <tr><td>✌ 2 fingers</td><td>Continuous</td><td>Move selected motor backward</td></tr>
             <tr><td>✊ Fist</td><td>&lt; 5 seconds</td><td>Stop motor</td></tr>

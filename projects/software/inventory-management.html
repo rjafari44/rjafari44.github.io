@@ -118,7 +118,7 @@
         A C++ inventory management system for tracking precious metal holdings, available as both a command-line program and a Qt6 desktop GUI. Both versions share the same validation rules and data model, just with different front ends.
       </p>
       <p>
-        The program lets a user manage a personal inventory of five precious metals — Platinum, Gold, Diamond, Silver, and Copper. Each metal has a maximum storage capacity of 100 kg, and users can deposit or withdraw fractional amounts at any time. A balance summary shows all five holdings at a glance.
+        The program lets a user manage a personal inventory of five precious metals: Platinum, Gold, Diamond, Silver, and Copper. Each metal has a maximum storage capacity of 100 kg, and users can deposit or withdraw fractional amounts at any time. A balance summary shows all five holdings at a glance.
       </p>
       <p>
         I built this project as I was getting back into C++ after a break, then later ported it to a Qt GUI to practice signal/slot driven design and CMake. The goal throughout was clean code organization across multiple files, struct-based data modeling, and robust input validation.
@@ -161,7 +161,7 @@
 <span class="kw">enum</span> Operation { QUIT, DEPOSIT, WITHDRAW, MAIN_MENU };</pre>
       </div>
       <p>
-        Passing the <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">Inventory</code> struct by reference into display and transaction functions means there is one authoritative copy of the data at all times — no globals, no duplication.
+        Passing the <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">Inventory</code> struct by reference into display and transaction functions means there is one authoritative copy of the data at all times, no globals, no duplication.
       </p>
     </div>
 
@@ -174,7 +174,7 @@
 
       <h3>Two-Level Menu Navigation</h3>
       <p>
-        The outer menu selects a metal; the inner menu handles the operation. Each metal routes to the same <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">manageInventory()</code> function, passing only the relevant float field by reference — no duplication across five nearly-identical branches.
+        The outer menu selects a metal; the inner menu handles the operation. Each metal routes to the same <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">manageInventory()</code> function, passing only the relevant float field by reference, no duplication across five nearly-identical branches.
       </p>
       <div class="code-block">
         <div class="code-common">
@@ -262,7 +262,7 @@ amountLineEdit-&gt;<span class="fn">setValidator</span>(amountValidator);</pre>
       <p class="section-label">03 — Reflection</p>
       <h2>What I Learned</h2>
       <p>
-        The biggest takeaway was how much clarity you get from splitting a program into focused files early — even in a small project. Having <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">validate.cpp</code> contain nothing but two pure functions made it trivial to audit the correctness of the deposit and withdrawal logic in isolation.
+        The biggest takeaway was how much clarity you get from splitting a program into focused files early, even in a small project. Having <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">validate.cpp</code> contain nothing but two pure functions made it trivial to audit the correctness of the deposit and withdrawal logic in isolation.
       </p>
       <p>
         I also reinforced the pattern of guarding every <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">cin</code> read with a fail-state check. It is easy to skip when prototyping, but user input is unpredictable and a single unguarded read can put the stream into a broken state that silently corrupts subsequent reads.

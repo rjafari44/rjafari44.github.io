@@ -133,7 +133,7 @@
         A Python project demonstrating high-frequency noise reduction in audio signals using a discrete-time LTI moving-average low-pass filter, with analysis in both the time- and frequency-domains. Originally built as extra credit for a course.
       </p>
       <p>
-        A clean audio sample is loaded, artificial Gaussian noise is added, and a discrete-time LTI low-pass filter is then applied to recover a cleaner version of the signal. Results are visualized at each stage — clean vs noisy, and clean vs filtered. The audio used was a short recording of my own voice.
+        A clean audio sample is loaded, artificial Gaussian noise is added, and a discrete-time LTI low-pass filter is then applied to recover a cleaner version of the signal. Results are visualized at each stage: clean vs noisy, and clean vs filtered. The audio used was a short recording of my own voice.
       </p>
     </div>
 
@@ -154,7 +154,7 @@
         <p>y[n] = x[n] * h[n]            &nbsp;&nbsp; (filtered output via convolution)</p>
       </div>
       <p>
-        N is the filter length — it controls how many samples are averaged together. A larger N means stronger high-frequency attenuation but more smoothing of the original signal.
+        N is the filter length: it controls how many samples are averaged together. A larger N means stronger high-frequency attenuation but more smoothing of the original signal.
       </p>
     </div>
 
@@ -215,7 +215,7 @@ signal_filtered = np.<span class="fn">clip</span>(signal_filtered, -<span class=
 
       <h3>Frequency-Domain Analysis</h3>
       <p>
-        FFTs are computed for all three signals using <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">np.fft.fft</code>. Magnitudes are converted to decibels — the linear scale made the clean and noisy spectra look nearly identical, so the logarithmic scale was necessary to reveal actual differences.
+        FFTs are computed for all three signals using <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">np.fft.fft</code>. Magnitudes are converted to decibels: the linear scale made the clean and noisy spectra look nearly identical, so the logarithmic scale was necessary to reveal actual differences.
       </p>
       <div class="code-block">
         <div class="code-header">
@@ -248,7 +248,7 @@ freqs = np.fft.<span class="fn">fftfreq</span>(<span class="fn">len</span>(signa
 
       <h3>Time-Domain — Clean vs Filtered</h3>
       <p>
-        After filtering, the amplitude spread is significantly reduced compared to the noisy signal, though it does not fully return to the clean signal's amplitude — a trade-off of the moving-average approach.
+        After filtering, the amplitude spread is significantly reduced compared to the noisy signal, though it does not fully return to the clean signal's amplitude, a trade-off of the moving-average approach.
       </p>
       <img src="../../assets/audio-filtering/time-domain-clean-vs-filtered.png" alt="Time-domain: clean vs filtered" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
 
@@ -260,7 +260,7 @@ freqs = np.fft.<span class="fn">fftfreq</span>(<span class="fn">len</span>(signa
 
       <h3>Frequency-Domain — Clean vs Filtered</h3>
       <p>
-        The filtered signal's magnitude range closely matches the clean signal, but introduces periodic nulls caused by the zeros of the moving-average filter's frequency response — a known characteristic of this filter type.
+        The filtered signal's magnitude range closely matches the clean signal, but introduces periodic nulls caused by the zeros of the moving-average filter's frequency response, a known characteristic of this filter type.
       </p>
       <img src="../../assets/audio-filtering/frequency-domain-clean-vs-filtered.png" alt="Frequency-domain: clean vs filtered" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;border:1px solid var(--border);" />
     </div>
@@ -272,10 +272,10 @@ freqs = np.fft.<span class="fn">fftfreq</span>(<span class="fn">len</span>(signa
       <p class="section-label">04 — Reflection</p>
       <h2>What I Learned</h2>
       <p>
-        The most interesting result was the spectral nulls introduced by the moving-average filter. Going in, I expected cleaner output to simply mean a flatter noise floor — seeing the periodic cancellation pattern in the frequency domain made the theoretical behavior of FIR filter zeros concrete in a way that reading about it hadn't.
+        The most interesting result was the spectral nulls introduced by the moving-average filter. Going in, I expected cleaner output to simply mean a flatter noise floor, seeing the periodic cancellation pattern in the frequency domain made the theoretical behavior of FIR filter zeros concrete in a way that reading about it hadn't.
       </p>
       <p>
-        I also learned that linear frequency-domain plots were essentially useless for this analysis — the differences only became visible after switching to a logarithmic (dB) scale. That was a practical lesson in choosing the right representation for the data you're trying to inspect.
+        I also learned that linear frequency-domain plots were essentially useless for this analysis: the differences only became visible after switching to a logarithmic (dB) scale. That was a practical lesson in choosing the right representation for the data you're trying to inspect.
       </p>
       <p>
         If I extended this project, I'd experiment with a proper windowed FIR filter (e.g. a Hamming-windowed sinc) to get a sharper frequency cutoff without the spectral nulls, and add a parameter sweep to visualize how filter length N affects the trade-off between noise reduction and signal preservation.

@@ -124,7 +124,7 @@
       <p class="section-label">Overview</p>
       <h2>Transfer function input to Bode plot in one command</h2>
       <p>
-        A command-line tool that accepts a transfer function H(s) — entered as a plain text expression — and produces accurate magnitude and phase plots using Matplotlib and SciPy. The goal was to make frequency-domain analysis fast and frictionless: no GUI, no coefficient arrays to manually type out, just the expression as you'd write it on paper.
+        A command-line tool that accepts a transfer function H(s), entered as a plain text expression, and produces accurate magnitude and phase plots using Matplotlib and SciPy. The goal was to make frequency-domain analysis fast and frictionless: no GUI, no coefficient arrays to manually type out, just the expression as you'd write it on paper.
       </p>
       <p>
         The script parses factored forms, distributed forms, and any mix of the two. Asterisks are optional, missing terms are filled in automatically, and if a typo is detected the script prompts you to re-enter rather than crashing.
@@ -135,7 +135,7 @@
       <img src="../../assets/bode-plot/bode-plot-magnitude.png" alt="Magnitude plot" style="width:50%;border-radius:3px;border:1px solid var(--border);" />
       <img src="../../assets/bode-plot/bode-plot-phase.png" alt="Phase plot" style="width:50%;border-radius:3px;border:1px solid var(--border);" />
     </div>
-    <p style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;color:var(--ink-3);margin-top:-0.5rem;margin-bottom:1.5rem;">Sample output — H(s) = 1 / (s + 5), 1st Order Low-Pass</p>
+    <p style="font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;color:var(--ink-3);margin-top:-0.5rem;margin-bottom:1.5rem;">Sample output, H(s) = 1 / (s + 5), 1st Order Low-Pass</p>
 
     <hr class="divider">
 
@@ -216,7 +216,7 @@ No asterisk:   <span class="num">0.2</span>(s+<span class="num">10</span>)   ≡
             <tr><td>2nd order</td><td>Low-Pass, Band-Pass, High-Pass / Notch, Notch (Non-Minimum Phase)</td></tr>
             <tr><td>3rd order</td><td>Low-Pass, Low-Pass / Band-Pass, Band-Pass, High-Pass / Shelving</td></tr>
             <tr><td>Any order</td><td>Integrator / Low-Pass, Differentiator / High-Pass, Band-Pass (Integrator + Differentiator)</td></tr>
-            <tr><td>Above 3rd</td><td>Plot renders accurately — filter label not supported</td></tr>
+            <tr><td>Above 3rd</td><td>Plot renders accurately, filter label not supported</td></tr>
           </tbody>
         </table>
       </div>
@@ -229,7 +229,7 @@ No asterisk:   <span class="num">0.2</span>(s+<span class="num">10</span>)   ≡
       <p class="section-label">03 — Reflection</p>
       <h2>What I Learned</h2>
       <p>
-        Writing a robust expression parser from scratch — without a symbolic math library — pushed me to think carefully about edge cases: implicit coefficients, optional asterisks, mixed factored and distributed forms, and duplicate powers. Regex alone isn't enough; the real work is in correctly combining the tokenised factors via polynomial multiplication.
+        Writing a robust expression parser from scratch, without a symbolic math library, pushed me to think carefully about edge cases: implicit coefficients, optional asterisks, mixed factored and distributed forms, and duplicate powers. Regex alone isn't enough; the real work is in correctly combining the tokenised factors via polynomial multiplication.
       </p>
       <p>
         The classification logic was a good exercise in translating control-theory knowledge into code: deciding what pole and zero conditions uniquely identify a filter type, handling integrators and differentiators as cross-cutting concerns, and knowing where to draw the line on automated classification rather than produce a misleading label.

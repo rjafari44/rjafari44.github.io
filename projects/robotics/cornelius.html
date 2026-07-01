@@ -262,7 +262,7 @@
         Cornelius is a wheeled rover built from scratch on two ESP32-C3 boards communicating over ESP-NOW. The rover supports both autonomous obstacle avoidance and real-time manual control via a custom wireless controller with an analog joystick. A push button on the controller toggles between modes on the fly.
       </p>
       <p>
-        In autonomous mode, an HC-SR04 ultrasonic sensor mounted on a micro servo scans for obstacles and reroutes without any input. In manual mode, joystick deflection is smoothed with a rolling average and mapped proportionally to motor speed. The chassis and wheels are custom 3D printed in PLA. The project spans mechanical design, electrical wiring, and embedded C++ programming — all done solo.
+        In autonomous mode, an HC-SR04 ultrasonic sensor mounted on a micro servo scans for obstacles and reroutes without any input. In manual mode, joystick deflection is smoothed with a rolling average and mapped proportionally to motor speed. The chassis and wheels are custom 3D printed in PLA. The project spans mechanical design, electrical wiring, and embedded C++ programming, all done solo.
       </p>
     </div>
 
@@ -279,7 +279,7 @@
       </p>
       <ul>
         <li>Front wheels mounted to TT motors with zipties; rear wheels attached via bolts through a printed mount bracket and two bearings each.</li>
-        <li>Servo bracket kept secure with electrical tape for fitment — an SG90 plastic gear servo works fine and is recommended over a metal gear MG90.</li>
+        <li>Servo bracket kept secure with electrical tape for fitment, an SG90 plastic gear servo works fine and is recommended over a metal gear MG90.</li>
         <li>Ultrasonic sensor bracket sourced online and reinforced with screws and washers for stability.</li>
         <li>Some wheel wobbling may occur, especially during extended operation.</li>
       </ul>
@@ -294,13 +294,13 @@
       <p class="section-label">02 — Electrical</p>
       <h2>Power & Wiring</h2>
       <p>
-        The rover is powered by two 18650 Li-ion batteries in series (~8 V total). A LM2596 adjustable buck converter steps voltage down to 5 V for the ESP32 and servo. The L298N motor driver handles motor switching; its voltage drop brings the TT motors into their safe 3–6 V operating range.
+        The rover is powered by two 18650 Li-ion batteries in series (~8 V total). A LM2596 adjustable buck converter steps voltage down to 5 V for the ESP32 and servo. The L298N motor driver handles motor switching; its voltage drop brings the TT motors into their safe 3 to 6 V operating range.
       </p>
       <ul>
         <li>ESP32 and SG90 servo both powered from the buck converter at 5 V.</li>
         <li>Three 100 µF electrolytic capacitors, three 0.1 µF ceramic capacitors, and one 10 µF ceramic capacitor placed across the power rail and GND to smooth voltage spikes from motor switching.</li>
         <li>Total current draw kept under 2 A.</li>
-        <li>Dupont jumper wires used throughout — solid connections are critical to avoid intermittent failures.</li>
+        <li>Dupont jumper wires used throughout, solid connections are critical to avoid intermittent failures.</li>
         <li>The controller uses a custom PCB for clean, compact wiring. PCB design files are in a <a href="https://github.com/rjafari44/ESP32-Remote-Control-PCB" target="_blank" style="color:var(--accent);text-decoration:none;">separate repository</a>.</li>
       </ul>
     </div>
@@ -361,7 +361,7 @@
       </div>
 
       <h3>Manual Control</h3>
-      <p>Joystick input is smoothed with a rolling average and mapped through <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">proportional()</code> to correct for the off-center neutral point. On the rover, the dominant axis wins — greater vertical deflection drives forward/backward; greater horizontal deflection turns:</p>
+      <p>Joystick input is smoothed with a rolling average and mapped through <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">proportional()</code> to correct for the off-center neutral point. On the rover, the dominant axis wins: greater vertical deflection drives forward/backward; greater horizontal deflection turns:</p>
 
       <div class="code-block">
         <div class="code-header">
@@ -392,7 +392,7 @@ lastY = (lastY * <span class="num">3</span> + y) / <span class="num">4</span>;
 <span class="kw">int</span> rightDist = <span class="fn">lookRight</span>();
 
 <span class="kw">if</span> (leftDist < OBSTACLE_LIMIT && rightDist < OBSTACLE_LIMIT) {
-  <span class="fn">moveBackward</span>();   <span class="cm">// both blocked — keep reversing</span>
+  <span class="fn">moveBackward</span>();   <span class="cm">// both blocked, keep reversing</span>
   <span class="kw">return</span>;
 }
 
@@ -437,7 +437,7 @@ lastY = (lastY * <span class="num">3</span> + y) / <span class="num">4</span>;
       <p class="section-label">05 — Reflection</p>
       <h2>What I Learned</h2>
       <p>
-        This project sharpened my ability to write clean embedded C++ under tight hardware constraints, think through edge cases in both autonomous and manual behavior, and debug physical systems where software issues and mechanical issues can look identical. Working with ESP-NOW for the first time — handling packet structs, MAC addressing, failsafe timing, and two independent firmware codebases that have to agree on every detail — pushed my embedded systems thinking significantly further than a single-board project would have. Structuring each codebase across multiple <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">.cpp</code> files with a shared header also reinforced good habits for keeping embedded projects organized and maintainable.
+        This project sharpened my ability to write clean embedded C++ under tight hardware constraints, think through edge cases in both autonomous and manual behavior, and debug physical systems where software issues and mechanical issues can look identical. Working with ESP-NOW for the first time, handling packet structs, MAC addressing, failsafe timing, and two independent firmware codebases that have to agree on every detail, pushed my embedded systems thinking significantly further than a single-board project would have. Structuring each codebase across multiple <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">.cpp</code> files with a shared header also reinforced good habits for keeping embedded projects organized and maintainable.
       </p>
     </div>
 

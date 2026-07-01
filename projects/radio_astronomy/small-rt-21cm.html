@@ -365,7 +365,7 @@
       <p class="section-label">Overview</p>
       <h2>Detecting galactic hydrogen from the backyard</h2>
       <p>
-        This project is a ground-up radio telescope designed to detect the 21 cm hydrogen line — a spectral emission at 1420.405 MHz produced by neutral hydrogen atoms throughout the galaxy. Observing this line is one of the most fundamental techniques in radio astronomy, and the distribution of hydrogen across the Milky Way carries direct evidence for the large-scale structure of the universe.
+        This project is a ground-up radio telescope designed to detect the 21 cm hydrogen line, a spectral emission at 1420.405 MHz produced by neutral hydrogen atoms throughout the galaxy. Observing this line is one of the most fundamental techniques in radio astronomy, and the distribution of hydrogen across the Milky Way carries direct evidence for the large-scale structure of the universe.
       </p>
       <p>
         The telescope uses a 2.2 m parabolic dish on a custom altitude-azimuth mount, pointed by a motorized drive system. The project is divided into two distinct subsystems: the RF signal chain that captures and conditions the hydrogen line signal, and the mechanical drive system that controls pointing.
@@ -534,7 +534,7 @@
           </thead>
           <tbody>
             <tr><td>Dish + Feed Horn</td><td>2.2 m Parabolic</td><td>—</td><td>Collects and focuses 1420 MHz emission</td></tr>
-            <tr><td>LNA 1</td><td>Low Noise Amplifier</td><td>+14 dB</td><td>First gain stage — sets system noise figure</td></tr>
+            <tr><td>LNA 1</td><td>Low Noise Amplifier</td><td>+14 dB</td><td>First gain stage, sets system noise figure</td></tr>
             <tr><td>BPF 1</td><td>Bandpass Filter</td><td>−2 dB</td><td>50 MHz bandwidth, rejects out-of-band RFI before 2nd amp</td></tr>
             <tr><td>LNA 2</td><td>Low Noise Amplifier</td><td>+14 dB</td><td>Additional gain before cable loss</td></tr>
             <tr><td>Bias Tee (TX)</td><td>Bias Tee</td><td>~0 dB</td><td>Injects DC over coax to power remote LNAs</td></tr>
@@ -555,7 +555,7 @@
 
       <h3>IQ Mixer & the Local Oscillator</h3>
       <p>
-        The image rejection mixer is the heart of the receiver's frequency conversion. A local oscillator (LO) running at 1416 MHz is mixed with the incoming 1420 MHz signal, which mathematically produces sum and difference frequencies — the difference lands the hydrogen line at roughly 4 MHz, a frequency the RTL-SDR can easily digitize. An "image rejection" mixer generates two copies of the mixed signal 90° apart in phase (the I and Q channels), then combines them so that signals at the image frequency — which would otherwise fold in on top of the desired signal — cancel out. This gives a clean, interference-free baseband that represents only the sky around 1420 MHz.
+        The image rejection mixer is the heart of the receiver's frequency conversion. A local oscillator (LO) running at 1416 MHz is mixed with the incoming 1420 MHz signal, which mathematically produces sum and difference frequencies: the difference lands the hydrogen line at roughly 4 MHz, a frequency the RTL-SDR can easily digitize. An "image rejection" mixer generates two copies of the mixed signal 90° apart in phase (the I and Q channels), then combines them so that signals at the image frequency, which would otherwise fold in on top of the desired signal, cancel out. This gives a clean, interference-free baseband that represents only the sky around 1420 MHz.
       </p>
 
       <h3>Testing & Validation</h3>
@@ -566,7 +566,7 @@
       <img src="../../assets/srt-21cm/srt-bench.jpg" alt="Signal chain bench test and verification" style="width:100%;border-radius:3px;margin:1.5rem 0 0.5rem;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
       <div class="image-slot" style="display:none;">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-        <span>Lab bench — signal chain verification</span>
+        <span>Lab bench, signal chain verification</span>
       </div>
 
       <h3>Observation Data</h3>
@@ -586,7 +586,7 @@
       </p>
       <ul>
         <li>2.2 m parabolic dish providing sufficient gain to resolve faint galactic hydrogen emission.</li>
-        <li>Altitude axis driven by a linear actuator controlled via joystick input — elevation is set and held by the actuator's physical stroke.</li>
+        <li>Altitude axis driven by a linear actuator controlled via joystick input, elevation is set and held by the actuator's physical stroke.</li>
         <li>Azimuth axis allows full 360° rotation for sky coverage.</li>
         <li>Drive electronics use dual VNH5019 motor driver ICs with current sensing for stall detection and fault protection.</li>
       </ul>
@@ -611,7 +611,7 @@
           <span class="code-filename">altitude-motors.ino</span>
           <span class="code-lang">C++</span>
         </div>
-        <pre><span class="cm">// VNH5019 pulls EN/DIAG LOW on a driver fault — check before anything else</span>
+        <pre><span class="cm">// VNH5019 pulls EN/DIAG LOW on a driver fault, check before anything else</span>
 <span class="kw">if</span> (digitalRead(M1_EN) == LOW || digitalRead(M2_EN) == LOW) {
     <span class="fn">stopMotors</span>();
     Serial.<span class="fn">println</span>(<span class="str">"DRIVER FAULT!"</span>);
@@ -625,7 +625,7 @@
 
     Serial.<span class="fn">println</span>(<span class="str">"STALL CURRENT!"</span>);
     <span class="fn">stopMotors</span>();
-    stalled = <span class="kw">true</span>; <span class="cm">// latch — operator must center joystick to re-engage</span>
+    stalled = <span class="kw">true</span>; <span class="cm">// latch, operator must center joystick to re-engage</span>
 }
 
 <span class="cm">// map joystick deflection to PWM with deadzone at center</span>
@@ -657,7 +657,7 @@
 
       <h3>Safety Features</h3>
       <ul>
-        <li>Driver fault detection reads the VNH5019 EN/DIAG open-drain pin — held HIGH by INPUT_PULLUP and pulled LOW by the IC on any over-temperature or under-voltage event.</li>
+        <li>Driver fault detection reads the VNH5019 EN/DIAG open-drain pin, held HIGH by INPUT_PULLUP and pulled LOW by the IC on any over-temperature or under-voltage event.</li>
         <li>Stall detection monitors the current sense (CS) pin on both motor channels; sustained high current triggers a latched stop to protect the actuator and driver.</li>
         <li>Stall latch requires the joystick to return to center before the drive can be re-engaged, preventing an accidental re-start into an already-stalled load.</li>
         <li>Configurable DEADZONE constant prevents the actuator from creeping due to joystick center offset.</li>

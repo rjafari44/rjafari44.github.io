@@ -253,7 +253,7 @@
         The Wall Climber is a remote-controlled robot designed to scale vertical surfaces using a suction-based adhesion system. A 7-inch tri-blade fan driven by a brushless motor generates negative pressure beneath the chassis, pulling the robot firmly against the wall while four TT gear motors drive it in any direction across the surface.
       </p>
       <p>
-        The project spans mechanical design, power systems, and RC integration — from a laser-cut acrylic frame and 3D-printed PLA shroud that channels suction, to a 4S LiPo power system capable of driving both the locomotion and adhesion systems simultaneously.
+        The project spans mechanical design, power systems, and RC integration, from a laser-cut acrylic frame and 3D-printed PLA shroud that channels suction, to a 4S LiPo power system capable of driving both the locomotion and adhesion systems simultaneously.
       </p>
     </div>
 
@@ -281,14 +281,14 @@
       <p class="section-label">02 — Mechanical</p>
       <h2>Chassis, Shroud & Assembly</h2>
       <p>
-        The frame is laser-cut from acrylic sheet, chosen for its rigidity, low weight, and ease of fabrication. The shroud — the sealed enclosure that channels airflow from the fan to create suction against the wall — is 3D printed in PLA. Together they form a compact platform that keeps the center of mass as close to the wall surface as possible to minimize the tipping moment during climbing.
+        The frame is laser-cut from acrylic sheet, chosen for its rigidity, low weight, and ease of fabrication. The shroud, the sealed enclosure that channels airflow from the fan to create suction against the wall, is 3D printed in PLA. Together they form a compact platform that keeps the center of mass as close to the wall surface as possible to minimize the tipping moment during climbing.
       </p>
       <ul>
         <li>Acrylic frame provides a rigid, flat mounting surface for all electronics and motors.</li>
         <li>PLA shroud is designed to seal around the fan and form a low-pressure chamber against the climbing surface.</li>
         <li>Four TT dual-shaft gear motors are mounted at the corners for 4WD drive.</li>
         <li>Wheels are 65×26mm plastic tire wheels matched to the TT motor shaft spec.</li>
-        <li>CAD files available for both the shroud and frame — see GitHub.</li>
+        <li>CAD files available for both the shroud and frame, see GitHub.</li>
       </ul>
 
       <!-- CAD assembly -->
@@ -304,7 +304,7 @@
       <p class="section-label">03 — Electrical & Power</p>
       <h2>Power System</h2>
       <p>
-        The robot is powered by a single 4S LiPo battery delivering 14.8V with a 120C discharge rating — providing ample current headroom for both the brushless fan motor and the four brushed drive motors running simultaneously. Two separate ESCs manage the two subsystems independently, both receiving control signals from the 2.4GHz receiver.
+        The robot is powered by a single 4S LiPo battery delivering 14.8V with a 120C discharge rating, providing ample current headroom for both the brushless fan motor and the four brushed drive motors running simultaneously. Two separate ESCs manage the two subsystems independently, both receiving control signals from the 2.4GHz receiver.
       </p>
       <ul>
         <li>The fan motor ESC is built directly into the Hyperion 2204 motor unit, simplifying wiring and saving space.</li>
@@ -321,12 +321,12 @@
       <p class="section-label">04 — Design Challenges</p>
       <h2>Engineering Constraints</h2>
       <p>
-        Vertical locomotion introduces a set of constraints that don't exist for ground robots. Every gram of weight works directly against the adhesion force, so the design required careful balance between suction output and total mass — particularly with a 4S LiPo and brushless motor system adding significant weight.
+        Vertical locomotion introduces a set of constraints that don't exist for ground robots. Every gram of weight works directly against the adhesion force, so the design required careful balance between suction output and total mass, particularly with a 4S LiPo and brushless motor system adding significant weight.
       </p>
       <ul>
         <li>Shroud geometry needed to minimize air leakage around the perimeter while still allowing the wheels to contact the surface.</li>
         <li>The 18mm ground clearance (wheel height above the wall surface) set a firm constraint on the suction chamber depth and fan sizing.</li>
-        <li>Power distribution required careful sequencing — the fan must spin up before the robot attempts to move, or adhesion fails.</li>
+        <li>Power distribution required careful sequencing, the fan must spin up before the robot attempts to move, or adhesion fails.</li>
         <li>At 668g total weight, the fan and shroud system must generate enough negative pressure to hold the robot against the wall under dynamic loads from the drive motors.</li>
         <li>The acrylic frame had to be stiff enough to prevent the chassis from flexing away from the wall surface under suction load.</li>
       </ul>
