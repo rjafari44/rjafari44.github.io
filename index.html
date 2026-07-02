@@ -304,65 +304,81 @@
     .project-card {
       display: block;
       text-decoration: none;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-top: 2px solid var(--border);
-      padding: 1.8rem;
-      border-radius: 3px;
-      transition: border-color 0.2s, transform 0.2s;
       position: relative;
+      border-radius: 1rem;
       overflow: hidden;
+      background: #f2f2f0;
+      border: 1px solid rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
       cursor: pointer;
     }
     .project-card:hover {
-      border-color: var(--ink-3);
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+      border-color: rgba(154,54,34,0.28);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1);
     }
-    .project-card::before { display: none; }
-    .cat-robotics .project-card { border-top-color: var(--accent); }
-    .cat-radio    .project-card { border-top-color: var(--blue); }
-    .cat-software .project-card { border-top-color: var(--green); }
-    .cat-pcb      .project-card { border-top-color: var(--gold); }
+    .cat-robotics .project-card-dot { background: var(--accent); }
+    .cat-radio    .project-card-dot { background: var(--blue); }
+    .cat-software .project-card-dot { background: var(--green); }
+    .cat-pcb      .project-card-dot { background: var(--gold); }
 
+    .project-card-thumb {
+      height: 13rem;
+      position: relative;
+      overflow: hidden;
+      background: var(--border);
+    }
+    .project-card-thumb img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 50%;
+    }
+    .project-card-body { padding: 1.5rem; }
+    .project-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
     .project-card h3 {
       font-family: var(--serif);
-      font-size: 1.2rem;
       font-weight: 400;
-      margin-bottom: 0.7rem;
+      font-size: 1.15rem;
       color: var(--ink);
+      transition: color 0.2s;
+    }
+    .project-card-arrow {
+      flex-shrink: 0;
+      color: var(--ink-3);
+      transition: transform 0.2s, color 0.2s;
+      margin-top: 0.2rem;
+    }
+    .project-card:hover .project-card-arrow {
+      transform: translate(2px, -2px);
+      color: var(--accent);
     }
     .project-card p {
+      margin-top: 0.5rem;
       font-size: 0.88rem;
       color: var(--ink-2);
       line-height: 1.65;
-      margin-bottom: 1.2rem;
-    }
-    .project-card-footer {
-      display: flex; align-items: center; justify-content: space-between;
     }
     .project-tags {
-      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-top: 1.2rem;
     }
     .project-tag {
       font-family: var(--mono);
       font-size: 0.62rem;
-      letter-spacing: 0.08em;
-      padding: 0.2rem 0.55rem;
-      background: var(--bg);
+      letter-spacing: 0.06em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.1);
       color: var(--ink-2);
-      border-radius: 2px;
     }
-    .project-link {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      color: var(--ink-3);
-      text-decoration: none;
-      white-space: nowrap;
-      margin-left: 1rem;
-      transition: color 0.2s;
-    }
-    .project-link:hover { color: var(--ink); }
 
     /* RESUME */
     .resume-layout {
@@ -482,9 +498,9 @@
       color: var(--ink);
       text-decoration: none;
       border-radius: 2px;
-      transition: background 0.2s, color 0.2s;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
     }
-    .btn:hover { background: var(--ink); color: var(--bg); }
+    .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 
     /* CONTACT */
     #contact { background: var(--surface); border-top: 1px solid var(--border); }
@@ -1130,9 +1146,15 @@
       <div class="project-grid">
 
         <a class="project-card" href="projects/robotics/epione.html">
-          <h3>Epione — Arctos Robot Arm</h3>
-          <p>A 6-DOF desktop robotic arm based on the open-source Arctos platform, built and configured from the ground up. Handles electrical integration, motor driver wiring, and motion control tuning. Named after the Greek goddess of soothing pain.</p>
-          <div class="project-card-footer">
+          <div class="project-card-thumb">
+            <img src="/epione-thumb.jpg" alt="Epione — Arctos Robot Arm" loading="lazy" decoding="async" onerror="this.style.display='none'">
+          </div>
+          <div class="project-card-body">
+            <div class="project-card-head">
+              <h3>Epione — Arctos Robot Arm</h3>
+              <svg class="project-card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p>A 6-DOF desktop robotic arm based on the open-source Arctos platform, built and configured from the ground up. Handles electrical integration, motor driver wiring, and motion control tuning. Named after the Greek goddess of soothing pain.</p>
             <div class="project-tags">
               <span class="project-tag">Arduino</span>
               <span class="project-tag">CAD</span>
@@ -1143,9 +1165,15 @@
         </a>
 
         <a class="project-card" href="projects/robotics/cornelius.html">
-          <h3>Cornelius — Autonomous Arduino Rover</h3>
-          <p>A self-navigating wheeled robot built on Arduino that detects and avoids obstacles in real time using ultrasonic sensors. Fully designed, wired, and programmed from scratch as a solo embedded systems project.</p>
-          <div class="project-card-footer">
+          <div class="project-card-thumb">
+            <img src="/cornelius-thumb.jpg" alt="Cornelius — Autonomous Arduino Rover" loading="lazy" decoding="async" onerror="this.style.display='none'">
+          </div>
+          <div class="project-card-body">
+            <div class="project-card-head">
+              <h3>Cornelius — Autonomous Arduino Rover</h3>
+              <svg class="project-card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p>A self-navigating wheeled robot built on Arduino that detects and avoids obstacles in real time using ultrasonic sensors. Fully designed, wired, and programmed from scratch as a solo embedded systems project.</p>
             <div class="project-tags">
               <span class="project-tag">Arduino</span>
               <span class="project-tag">CAD</span>
@@ -1156,9 +1184,15 @@
         </a>
 
         <a class="project-card" href="projects/robotics/wall-climber.html">
-          <h3>Wall Climber Robot</h3>
-          <p>A robot designed to scale vertical surfaces using a suction or adhesion-based locomotion system. Explores unconventional mobility in robotics through custom mechanical and electrical design.</p>
-          <div class="project-card-footer">
+          <div class="project-card-thumb">
+            <img src="/wall-climber-thumb.jpg" alt="Wall Climber Robot" loading="lazy" decoding="async" onerror="this.style.display='none'">
+          </div>
+          <div class="project-card-body">
+            <div class="project-card-head">
+              <h3>Wall Climber Robot</h3>
+              <svg class="project-card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p>A robot designed to scale vertical surfaces using a suction or adhesion-based locomotion system. Explores unconventional mobility in robotics through custom mechanical and electrical design.</p>
             <div class="project-tags">
               <span class="project-tag">ESC</span>
               <span class="project-tag">CAD</span>
@@ -1177,9 +1211,15 @@
       <div class="project-grid">
 
         <a class="project-card" href="projects/radio_astronomy/small-rt-21cm.html">
-          <h3>21 cm Hydrogen Line Radio Telescope</h3>
-          <p>radio telescope designed to detect the 21 cm hydrogen line, a spectral emission at 1420.405 MHz produced by neutral hydrogen atoms throughout the galaxy.</p>
-          <div class="project-card-footer">
+          <div class="project-card-thumb">
+            <img src="/hydrogen-line-thumb.jpg" alt="21 cm Hydrogen Line Radio Telescope" loading="lazy" decoding="async" onerror="this.style.display='none'">
+          </div>
+          <div class="project-card-body">
+            <div class="project-card-head">
+              <h3>21 cm Hydrogen Line Radio Telescope</h3>
+              <svg class="project-card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p>A radio telescope designed to detect the 21 cm hydrogen line, a spectral emission at 1420.405 MHz produced by neutral hydrogen atoms throughout the galaxy.</p>
             <div class="project-tags">
               <span class="project-tag">RTL-SDR</span>
               <span class="project-tag">RF</span>
@@ -1199,9 +1239,15 @@
       <div class="project-grid">
 
         <a class="project-card" href="projects/software/inventory-management.html">
-          <h3>Inventory Management System</h3>
-          <p>A command-line inventory management system written in C++, with a Qt GUI.</p>
-          <div class="project-card-footer">
+          <div class="project-card-thumb">
+            <img src="/inventory-management-thumb.jpg" alt="Inventory Management System" loading="lazy" decoding="async" onerror="this.style.display='none'">
+          </div>
+          <div class="project-card-body">
+            <div class="project-card-head">
+              <h3>Inventory Management System</h3>
+              <svg class="project-card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p>A command-line inventory management system written in C++, with a Qt GUI.</p>
             <div class="project-tags">
               <span class="project-tag">C++</span>
               <span class="project-tag">CLI</span>
@@ -1212,9 +1258,15 @@
         </a>
 
         <a class="project-card" href="projects/software/dsp-audio-filtering.html">
-          <h3>DSP Audio Filtering</h3>
-          <p>A digital signal processing project for audio filtering implemented in Python.</p>
-          <div class="project-card-footer">
+          <div class="project-card-thumb">
+            <img src="/dsp-audio-filtering-thumb.jpg" alt="DSP Audio Filtering" loading="lazy" decoding="async" onerror="this.style.display='none'">
+          </div>
+          <div class="project-card-body">
+            <div class="project-card-head">
+              <h3>DSP Audio Filtering</h3>
+              <svg class="project-card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p>A digital signal processing project for audio filtering implemented in Python.</p>
             <div class="project-tags">
               <span class="project-tag">Python</span>
               <span class="project-tag">DSP</span>
@@ -1225,9 +1277,15 @@
         </a>
 
         <a class="project-card" href="projects/software/bode-plot-calculator.html">
-          <h3>Bode Plot Calculator</h3>
-          <p>A Python tool for computing and visualizing Bode plots for transfer functions.</p>
-          <div class="project-card-footer">
+          <div class="project-card-thumb">
+            <img src="/bode-plot-calculator-thumb.jpg" alt="Bode Plot Calculator" loading="lazy" decoding="async" onerror="this.style.display='none'">
+          </div>
+          <div class="project-card-body">
+            <div class="project-card-head">
+              <h3>Bode Plot Calculator</h3>
+              <svg class="project-card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p>A Python tool for computing and visualizing Bode plots for transfer functions.</p>
             <div class="project-tags">
               <span class="project-tag">Python</span>
               <span class="project-tag">Signals</span>
@@ -1246,9 +1304,15 @@
       <div class="project-grid">
 
         <a class="project-card" href="projects/pcb/jetson-orin-hat.html">
-          <h3>Orin HAT Breakout Board</h3>
-          <p>A PCB designed by me and a colleague on allowing easy interfacing with the NVIDIA Orin Jetson.</p>
-          <div class="project-card-footer">
+          <div class="project-card-thumb">
+            <img src="/orin-hat-thumb.jpg" alt="Orin HAT Breakout Board" loading="lazy" decoding="async" onerror="this.style.display='none'">
+          </div>
+          <div class="project-card-body">
+            <div class="project-card-head">
+              <h3>Orin HAT Breakout Board</h3>
+              <svg class="project-card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p>A PCB designed by me and a colleague on allowing easy interfacing with the NVIDIA Orin Jetson.</p>
             <div class="project-tags">
               <span class="project-tag">Altium Designer</span>
               <span class="project-tag">IC Buffers</span>
@@ -1259,9 +1323,15 @@
         </a>
 
         <a class="project-card" href="projects/pcb/555-timer-board.html">
-          <h3>555 Timer Astable Board</h3>
-          <p>A simple PCB using the NE555 timer IC to drive an LED.</p>
-          <div class="project-card-footer">
+          <div class="project-card-thumb">
+            <img src="/555-timer-thumb.jpg" alt="555 Timer Astable Board" loading="lazy" decoding="async" onerror="this.style.display='none'">
+          </div>
+          <div class="project-card-body">
+            <div class="project-card-head">
+              <h3>555 Timer Astable Board</h3>
+              <svg class="project-card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p>A simple PCB using the NE555 timer IC to drive an LED.</p>
             <div class="project-tags">
               <span class="project-tag">KiCad</span>
               <span class="project-tag">LTspice</span>
@@ -1272,9 +1342,15 @@
         </a>
 
         <a class="project-card" href="projects/pcb/esp32-remote-control.html">
-          <h3>ESP32 Remote Control </h3>
-          <p>PCB utilizing a joystick and an ESP32 for remote controlling a robot.</p>
-          <div class="project-card-footer">
+          <div class="project-card-thumb">
+            <img src="/esp32-remote-control-thumb.jpg" alt="ESP32 Remote Control" loading="lazy" decoding="async" onerror="this.style.display='none'">
+          </div>
+          <div class="project-card-body">
+            <div class="project-card-head">
+              <h3>ESP32 Remote Control</h3>
+              <svg class="project-card-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L13 3M13 3H6M13 3V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p>PCB utilizing a joystick and an ESP32 for remote controlling a robot.</p>
             <div class="project-tags">
               <span class="project-tag">KiCad</span>
               <span class="project-tag">Embedded</span>
