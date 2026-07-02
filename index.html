@@ -24,7 +24,7 @@
       --mono:    'DM Mono', monospace;
       --serif:   'DM Serif Display', serif;
       --sans:    'DM Sans', sans-serif;
-      --max:     1440px;
+      --max:     1428px;
     }
 
     html { scroll-behavior: smooth; overflow-x: hidden; }
@@ -257,7 +257,7 @@
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      gap: 6rem;
     }
     .about-text p {
       color: var(--ink-2);
@@ -300,9 +300,10 @@
       background: var(--border);
     }
     .project-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.25rem;
     }
     .project-card {
       display: block;
@@ -314,6 +315,7 @@
       border: 1px solid rgba(0,0,0,0.08);
       transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
       cursor: pointer;
+      flex: 0 0 318px;
     }
     .project-card:hover {
       transform: translateY(-4px);
@@ -387,8 +389,9 @@
     .resume-layout {
       display: grid;
       grid-template-columns: 2fr 1fr;
-      gap: 4rem;
+      gap: 5rem;
     }
+    .resume-left { padding-right: 1rem; }
     .resume-section { margin-bottom: 2.8rem; }
     .resume-section h3 {
       font-family: var(--mono);
