@@ -256,7 +256,7 @@
     /* ABOUT */
     .about-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.4fr 1fr;
       gap: 6rem;
     }
     .about-text p {
@@ -341,6 +341,15 @@
       object-fit: cover;
       object-position: center 50%;
     }
+    /* Image position tags — add one of these classes to any
+       .project-card-thumb img to nudge its visible crop.
+       Adjust the percentage further if a specific image still
+       needs fine-tuning (0% = top edge, 100% = bottom edge). */
+    .project-card-thumb img.img-pos-top       { object-position: center 0%; }
+    .project-card-thumb img.img-pos-top-mid   { object-position: center 25%; }
+    .project-card-thumb img.img-pos-center    { object-position: center 50%; }
+    .project-card-thumb img.img-pos-bottom-mid{ object-position: center 75%; }
+    .project-card-thumb img.img-pos-bottom    { object-position: center 100%; }
     .project-card-body { padding: 1.5rem; }
     .project-card-head {
       display: flex;
@@ -1149,7 +1158,7 @@
 
         <a class="project-card" href="projects/robotics/epione.html">
           <div class="project-card-thumb">
-            <img src="/epione-thumb.jpg" alt="Epione — Arctos Robot Arm" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <img src="/assets/epione/epione-robot-arm.jpg" alt="Epione — Arctos Robot Arm" loading="lazy" decoding="async" onerror="this.style.display='none'" class="img-pos-top-mid">
           </div>
           <div class="project-card-body">
             <div class="project-card-head">
@@ -1168,7 +1177,7 @@
 
         <a class="project-card" href="projects/robotics/cornelius.html">
           <div class="project-card-thumb">
-            <img src="/cornelius-thumb.jpg" alt="Cornelius — Autonomous Arduino Rover" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <img src="/assets/cornelius/rover-new.jpg" alt="Cornelius — Autonomous Arduino Rover" loading="lazy" decoding="async" onerror="this.style.display='none'" class="img-pos-bottom">
           </div>
           <div class="project-card-body">
             <div class="project-card-head">
@@ -1187,7 +1196,7 @@
 
         <a class="project-card" href="projects/robotics/wall-climber.html">
           <div class="project-card-thumb">
-            <img src="/wall-climber-thumb.jpg" alt="Wall Climber Robot" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <img src="/assets/wall-climber/wall-climber-robot.jpg" alt="Wall Climber Robot" loading="lazy" decoding="async" onerror="this.style.display='none'" class="img-pos-center">
           </div>
           <div class="project-card-body">
             <div class="project-card-head">
@@ -1214,7 +1223,7 @@
 
         <a class="project-card" href="projects/radio_astronomy/small-rt-21cm.html">
           <div class="project-card-thumb">
-            <img src="/hydrogen-line-thumb.jpg" alt="21 cm Hydrogen Line Radio Telescope" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <img src="/assets/srt-21cm/radio-telescope-21cm.jpg" alt="21 cm Hydrogen Line Radio Telescope" loading="lazy" decoding="async" onerror="this.style.display='none'" class="img-pos-top-mid">
           </div>
           <div class="project-card-body">
             <div class="project-card-head">
@@ -1242,7 +1251,7 @@
 
         <a class="project-card" href="projects/software/inventory-management.html">
           <div class="project-card-thumb">
-            <img src="/inventory-management-thumb.jpg" alt="Inventory Management System" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <img src="/assets/inventory-system/gui-main-menu.png" alt="Inventory Management System" loading="lazy" decoding="async" onerror="this.style.display='none'" class="img-pos-top-mid">
           </div>
           <div class="project-card-body">
             <div class="project-card-head">
@@ -1261,7 +1270,7 @@
 
         <a class="project-card" href="projects/software/dsp-audio-filtering.html">
           <div class="project-card-thumb">
-            <img src="/dsp-audio-filtering-thumb.jpg" alt="DSP Audio Filtering" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <img src="/assets/audio-filtering/frequency-domain-clean-vs-noisy.png" alt="DSP Audio Filtering" loading="lazy" decoding="async" onerror="this.style.display='none'" class="img-pos-center">
           </div>
           <div class="project-card-body">
             <div class="project-card-head">
@@ -1280,7 +1289,7 @@
 
         <a class="project-card" href="projects/software/bode-plot-calculator.html">
           <div class="project-card-thumb">
-            <img src="/bode-plot-calculator-thumb.jpg" alt="Bode Plot Calculator" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <img src="/assets/bode-plot/bode-plot-magnitude.png" alt="Bode Plot Calculator" loading="lazy" decoding="async" onerror="this.style.display='none'" class="img-pos-center">
           </div>
           <div class="project-card-body">
             <div class="project-card-head">
@@ -1307,7 +1316,7 @@
 
         <a class="project-card" href="projects/pcb/jetson-orin-hat.html">
           <div class="project-card-thumb">
-            <img src="/orin-hat-thumb.jpg" alt="Orin HAT Breakout Board" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <img src="/assets/orin-hat/orin-hat-pcb-render.jpg" alt="Orin HAT Breakout Board" loading="lazy" decoding="async" onerror="this.style.display='none'" class="img-pos-center">
           </div>
           <div class="project-card-body">
             <div class="project-card-head">
@@ -1326,7 +1335,7 @@
 
         <a class="project-card" href="projects/pcb/555-timer-board.html">
           <div class="project-card-thumb">
-            <img src="/555-timer-thumb.jpg" alt="555 Timer Astable Board" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <img src="/assets/555-timer/555-pcb-render.png" alt="555 Timer Astable Board" loading="lazy" decoding="async" onerror="this.style.display='none'" class="img-pos-center">
           </div>
           <div class="project-card-body">
             <div class="project-card-head">
@@ -1345,7 +1354,7 @@
 
         <a class="project-card" href="projects/pcb/esp32-remote-control.html">
           <div class="project-card-thumb">
-            <img src="/esp32-remote-control-thumb.jpg" alt="ESP32 Remote Control" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <img src="/assets/remote-control/remote-control-pcb-render.png" alt="ESP32 Remote Control" loading="lazy" decoding="async" onerror="this.style.display='none'" class="img-pos-center">
           </div>
           <div class="project-card-body">
             <div class="project-card-head">
@@ -1387,7 +1396,7 @@
           <div class="resume-entry">
             <div class="resume-entry-header">
               <h4>B.S. Electrical Engineering</h4>
-              <span class="date">Expected June 2027</span>
+              <span class="date">Sep 2025 to expected June 2027</span>
             </div>
             <p class="org">University of California, Irvine <span class="org-location">, Irvine, CA</span></p>
             <ul>
@@ -1399,7 +1408,7 @@
           <div class="resume-entry">
             <div class="resume-entry-header">
               <h4>A.S. Physics &amp; A.S. Mathematics</h4>
-              <span class="date">June 2025</span>
+              <span class="date">Aug 2021 to June 2025</span>
             </div>
             <p class="org">Saddleback College <span class="org-location">, Mission Viejo, CA</span></p>
             <ul>
