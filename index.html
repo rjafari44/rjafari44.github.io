@@ -45,7 +45,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 90vh;
+      min-height: 900px; /* was 90vh — fixed so it doesn't drift out of sync with the rest of the page under browser zoom */
       padding: 0 0 5rem;
       max-width: 100%;
       margin: 0;
@@ -195,8 +195,8 @@
     }
     .hero-name {
       font-family: var(--serif);
-      font-size: clamp(3.2rem, 7vw, 6.2rem);
-      line-height: 1.05;
+      font-size: 6.4rem; /* was clamp(3.4rem, 7vw, 6.4rem) — fixed so it doesn't drift out of sync under browser zoom */
+      line-height: 1.2;
       color: var(--ink);
       margin-bottom: 2rem;
     }
@@ -629,6 +629,63 @@
       border-top: 1px solid var(--border);
       max-width: var(--max);
       margin: 0 auto;
+    }
+
+    /* SCROLL INDICATOR */
+    .scroll-indicator {
+      position: fixed;
+      right: 2.4rem;
+      bottom: 2.8rem;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--ink-2);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+    }
+    .scroll-indicator.is-hidden {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    .scroll-indicator--clickable {
+      text-decoration: none;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .scroll-indicator--clickable.is-hidden {
+      pointer-events: none;
+    }
+    .scroll-indicator--clickable:hover {
+      opacity: 1;
+    }
+    .scroll-indicator--clickable:hover .scroll-indicator-ring {
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    .scroll-indicator-ring {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      animation: scrollBounce 2s ease-in-out infinite;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
     }
 
     /* RESPONSIVE */
@@ -1628,9 +1685,51 @@
     </div>
   </div>
 
-  <footer>
-    <p>Radin Jafari &mdash; Electrical Engineering Portfolio &mdash; UC Irvine</p>
+  <footer id="page-bottom">
+    <p>© 2026 Radin Jafari &mdash; Electrical Engineering Portfolio</p>
   </footer>
+
+  <a href="#page-bottom" class="scroll-indicator scroll-indicator--clickable" id="scrollIndicator" aria-label="Scroll to bottom">
+    <span>Scroll</span>
+    <div class="scroll-indicator-ring">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </a>
+
+  <a href="#hero" class="scroll-indicator scroll-indicator--clickable" id="scrollTopIndicator" aria-label="Back to top">
+    <div class="scroll-indicator-ring">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </div>
+    <span>Top</span>
+  </a>
+
+  <script>
+    (function () {
+      var downIndicator = document.getElementById('scrollIndicator');
+      var upIndicator = document.getElementById('scrollTopIndicator');
+
+      function updateIndicators() {
+        var scrollY = window.scrollY;
+        var nearBottom = (window.innerHeight + scrollY) >= (document.documentElement.scrollHeight - 40);
+
+        if (scrollY > 40) {
+          downIndicator.classList.add('is-hidden');
+        } else {
+          downIndicator.classList.remove('is-hidden');
+        }
+
+        if (nearBottom) {
+          upIndicator.classList.remove('is-hidden');
+        } else {
+          upIndicator.classList.add('is-hidden');
+        }
+      }
+
+      window.addEventListener('scroll', updateIndicators, { passive: true });
+      window.addEventListener('resize', updateIndicators);
+      updateIndicators();
+    })();
+  </script>
 
 </body>
 </html>

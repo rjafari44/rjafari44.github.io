@@ -198,9 +198,134 @@
       nav { padding: 1rem 1.5rem; }
       .project-hero, .project-body { padding-left: 1.5rem; padding-right: 1.5rem; }
     }
+  
+    /* BACK TO PORTFOLIO */
+    .back-to-portfolio {
+      text-align: center;
+      padding: 2.4rem 3rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.55rem 1.2rem;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .btn-home:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .btn-home svg { transition: transform 0.2s; }
+    .btn-home:hover svg { transform: translateX(-3px); }
+
+    /* BACK TO TOP (floating) — matches the front page's scroll indicator exactly */
+    .back-to-top {
+      position: fixed;
+      right: 2.4rem;
+      bottom: 2.8rem;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--ink-2);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0;
+      text-decoration: none;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .back-to-top.is-visible {
+      opacity: 0.9;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .back-to-top:hover {
+      opacity: 1;
+    }
+    .back-to-top:hover .back-to-top-ring {
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    .back-to-top-ring {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      animation: backToTopBounce 2s ease-in-out infinite;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    @keyframes backToTopBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* SCROLL DOWN (floating, clickable — jumps to bottom of page) */
+    .scroll-down {
+      position: fixed;
+      right: 2.4rem;
+      bottom: 2.8rem;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--ink-2);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .scroll-down.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+    }
+    .scroll-down:hover {
+      opacity: 1;
+    }
+    .scroll-down:hover .scroll-down-ring {
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    .scroll-down-ring {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      animation: backToTopBounce 2s ease-in-out infinite;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
   </style>
 </head>
-<body>
+<body id="top">
 
   <nav>
     <a class="nav-brand" href="../../index.html">Radin Jafari</a>
@@ -418,8 +543,55 @@
     </div>
 
   </div><!-- /project-body -->
+  <section class="back-to-portfolio">
+    <a class="btn-home" href="../../index.html#projects">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to All Projects
+    </a>
+  </section>
 
-  <footer>© 2026 Radin Jafari</footer>
 
+
+  <footer id="page-bottom">© 2026 Radin Jafari</footer>
+
+
+  <a href="#page-bottom" class="scroll-down" id="scrollDown" aria-label="Scroll to bottom">
+    <span>Scroll</span>
+    <span class="scroll-down-ring">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </span>
+  </a>
+
+  <a href="#top" class="back-to-top" id="backToTop" aria-label="Back to top">
+    <span class="back-to-top-ring">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </span>
+    <span>Top</span>
+  </a>
+
+  <script>
+    (function () {
+      var topBtn = document.getElementById('backToTop');
+      var downBtn = document.getElementById('scrollDown');
+      function update() {
+        var nearBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 40);
+
+        if (nearBottom) {
+          topBtn.classList.add('is-visible');
+        } else {
+          topBtn.classList.remove('is-visible');
+        }
+
+        if (window.scrollY > 40) {
+          downBtn.classList.add('is-hidden');
+        } else {
+          downBtn.classList.remove('is-hidden');
+        }
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
+  </script>
 </body>
 </html>
