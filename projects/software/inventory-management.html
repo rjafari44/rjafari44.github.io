@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory Management System — Radin Jafari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <script>
+    /* THEME — picks the saved choice (or the system setting) before the page draws, and handles the nav toggle */
+    (function () {
+      var root = document.documentElement, saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (e) {}
+      var media = window.matchMedia('(prefers-color-scheme: dark)');
+      function apply(theme) { root.setAttribute('data-theme', theme); }
+      apply(saved === 'light' || saved === 'dark' ? saved : (media.matches ? 'dark' : 'light'));
+      media.addEventListener('change', function (e) { if (!saved) apply(e.matches ? 'dark' : 'light'); });
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('#themeToggle')) return;
+        saved = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        apply(saved);
+        try { localStorage.setItem('theme', saved); } catch (e) {}
+      });
+    })();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface-2: #f0efe9;
+      --ink: #1c1b18;
+      --ink-2: #5c5a55;
+      --ink-3: #a8a6a0;
+      --accent: #269528;
+      --accent-dim: rgba(38,149,40,0.08);
+      --border: #e0deda;
+      --mono: 'DM Mono', monospace;
+      --serif: 'DM Serif Display', serif;
+      --sans: 'DM Sans', sans-serif;
+      --max: 1040px;
+      --code-bg: #1a1917;
+      --code-ink: #d4d0c8;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-weight: 300; line-height: 1.7; font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 3rem; background: rgba(247,246,242,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .nav-brand { font-family: var(--mono); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink); text-decoration: none; }
+    .nav-back { font-family: var(--mono); font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+
+    .project-hero { padding: 10rem 3rem 3rem; max-width: var(--max); margin: 0 auto; }
+    .project-category-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; }
+    .project-category-label::before { content: ''; display: inline-block; width: 20px; height: 2px; background: var(--accent); }
+    h1 { font-family: var(--serif); font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 400; line-height: 1.08; margin-bottom: 1.5rem; }
+    .project-meta { display: flex; flex-wrap: wrap; gap: 2rem; padding: 1.5rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .meta-item label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-3); display: block; margin-bottom: 0.2rem; }
+    .meta-item span { font-size: 0.88rem; color: var(--ink); }
+
+    .project-body { max-width: var(--max); margin: 0 auto; padding: 0 3rem 6rem; }
+
+    .section-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .section-label::before { content: ''; display: inline-block; width: 14px; height: 1px; background: var(--accent); }
+    h2 { font-family: var(--serif); font-size: 1.65rem; font-weight: 400; margin-bottom: 1rem; margin-top: 0; }
+    h3 { font-family: var(--mono); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); margin: 2rem 0 0.75rem; }
+    p { font-size: 0.95rem; color: var(--ink-2); margin-bottom: 1.2rem; line-height: 1.78; }
+    ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.5rem; }
+    ul li { font-size: 0.92rem; color: var(--ink-2); padding-left: 1.4rem; position: relative; line-height: 1.65; }
+    ul li::before { content: '—'; position: absolute; left: 0; color: var(--ink-3); font-size: 0.75rem; top: 0.1rem; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+    .tag { font-family: var(--mono); font-size: 0.69rem; letter-spacing: 0.08em; padding: 0.32rem 0.8rem; border: 1px solid var(--border); color: var(--ink-2); border-radius: 2px; }
+
+    .section-block { margin-top: 3.5rem; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+    .code-block { background: var(--code-bg); border-radius: 6px; margin: 1.5rem 0 2rem; overflow: hidden; }
+    .code-common { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1rem; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .code-filename { font-family: var(--mono); font-size: 0.68rem; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; }
+    .code-lang { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+    .code-block pre { margin: 0; padding: 1.4rem 1.2rem; overflow-x: auto; line-height: 1.65; font-family: var(--mono); font-size: 0.78rem; color: var(--code-ink); }
+    .code-block pre .cm { color: #686660; font-style: italic; }
+    .code-block pre .kw { color: #c5966a; }
+    .code-block pre .fn { color: #8ab5c5; }
+    .code-block pre .num { color: #d19a66; }
+    .code-block pre .tp { color: #c5a96a; }
+
+    footer { text-align: center; padding: 2.5rem 3rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); letter-spacing: 0.08em; }
+
+    @media (max-width: 760px) {
+      nav { padding: 1rem 1.5rem; }
+      .project-hero, .project-body { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+  
+    /* BACK TO PORTFOLIO */
+    .back-to-portfolio {
+      text-align: center;
+      padding: 2.4rem 3rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.55rem 1.2rem;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .btn-home:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .btn-home svg { transition: transform 0.2s; }
+    .btn-home:hover svg { transform: translateX(-3px); }
+
+    /* BACK TO TOP (floating) — matches the front page's scroll indicator exactly */
+    .back-to-top {
+      position: fixed;
+      right: 2.4rem;
+      bottom: 2.8rem;
+      width: 4rem; /* same width for Scroll and Top so the rings line up */
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--ink-2);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0;
+      text-decoration: none;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .back-to-top.is-visible {
+      opacity: 0.9;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .back-to-top:hover {
+      opacity: 1;
+    }
+    .back-to-top:hover .back-to-top-ring {
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    .back-to-top-ring {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      animation: backToTopBounce 2s ease-in-out infinite;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    @keyframes backToTopBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* SCROLL DOWN (floating, clickable — jumps to bottom of page) */
+    .scroll-down {
+      position: fixed;
+      right: 2.4rem;
+      bottom: 2.8rem;
+      width: 4rem; /* same width for Scroll and Top so the rings line up */
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--ink-2);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .scroll-down.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+    }
+    .scroll-down:hover {
+      opacity: 1;
+    }
+    .scroll-down:hover .scroll-down-ring {
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    .scroll-down-ring {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      animation: backToTopBounce 2s ease-in-out infinite;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    /* THEME TOGGLE (nav) */
+    .nav-back { margin-left: auto; }
+    .theme-toggle {
+      display: flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; padding: 0; margin-left: 1.6rem;
+      background: none; border: none; cursor: pointer;
+      color: var(--ink-2); transition: color 0.2s;
+    }
+    .theme-toggle:hover { color: var(--accent); }
+    .theme-toggle .icon-sun { display: none; }
+    :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+    /* DARK THEME — switched on by the theme script in <head> */
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg:         #161513;
+      --surface:    #1e1d1a;
+      --surface-2:  #26241f;
+      --ink:        #ece9e2;
+      --ink-2:      #b3afa6;
+      --ink-3:      #7f7b73;
+      --accent:     #5cc45e;
+      --accent-dim: rgba(92,196,94,0.14);
+      --border:     #34322d;
+      --code-bg:   #201f1c;
+    }
+    :root[data-theme="dark"] nav { background: rgba(22,21,19,0.92); }
+  </style>
+</head>
+<body id="top">
+
+  <nav>
+    <a class="nav-brand" href="../../index.html">Radin Jafari</a>
+    <a class="nav-back" href="../../index.html#projects">← Back to Projects</a>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch between light and dark theme">
+      <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <div class="project-hero">
+    <p class="project-category-label">Software · C++</p>
+    <h1>Inventory Management System</h1>
+    <div class="project-meta">
+      <div class="meta-item"><label>Language</label><span>C++</span></div>
+      <div class="meta-item"><label>Domain</label><span>Application Development</span></div>
+      <div class="meta-item"><label>Interface</label><span>CLI & Qt6 GUI</span></div>
+      <div class="meta-item"><label>Scope</label><span>Solo Project</span></div>
+    </div>
+  </div>
+
+  <!-- ======== BODY ======== -->
+  <div class="project-body">
+
+    <div class="tag-row">
+      <span class="tag">C++</span>
+      <span class="tag">CLI</span>
+      <span class="tag">Qt6</span>
+      <span class="tag">CMake</span>
+      <span class="tag">Input Validation</span>
+      <span class="tag">Structs</span>
+      <span class="tag">Signals & Slots</span>
+      <span class="tag">GUI Design</span>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="section-block" style="margin-top:1.5rem;">
+      <p class="section-label">Overview</p>
+      <h2>A CLI inventory tracker for precious metal holdings</h2>
+      <p>
+        A C++ inventory management system for tracking precious metal holdings, available as both a command-line program and a Qt6 desktop GUI. Both versions share the same validation rules and data model, just with different front ends.
+      </p>
+      <p>
+        The program lets a user manage a personal inventory of five precious metals: Platinum, Gold, Diamond, Silver, and Copper. Each metal has a maximum storage capacity of 100 kg, and users can deposit or withdraw fractional amounts at any time. A balance summary shows all five holdings at a glance.
+      </p>
+      <p>
+        I built this project as I was getting back into C++ after a break, then later ported it to a Qt GUI to practice signal/slot driven design and CMake. The goal throughout was clean code organization across multiple files, struct-based data modeling, and robust input validation.
+      </p>
+    </div>
+
+    <p class="section-label" style="margin-top:1.5rem;">CLI</p>
+    <img src="../../assets/inventory-system/cli-opening-menu.png" alt="CLI Intro Screenshot" style="width:80%;border-radius:3px;margin:0 0 1.5rem;display:block;border:1px solid var(--border);" />
+    <img src="../../assets/inventory-system/cli-sample-balance.png" alt="CLI Sample Balance" style="width:80%;border-radius:3px;margin:0 0 1.5rem;display:block;border:1px solid var(--border);" />
+
+    <p class="section-label">GUI</p>
+    <div style="display:flex;gap:1rem;margin-bottom:1.5rem;">
+      <img src="../../assets/inventory-system/gui-main-menu.png" alt="GUI Main Menu Screenshot" style="width:40%;border-radius:3px;display:block;border:1px solid var(--border);" />
+      <img src="../../assets/inventory-system/gui-transaction.png" alt="GUI Transaction Screenshot" style="width:40%;border-radius:3px;display:block;border:1px solid var(--border);" />
+    </div>
+
+    <hr class="divider">
+
+    <!-- DESIGN & ARCHITECTURE -->
+    <div class="section-block">
+      <p class="section-label">01 — Design & Architecture</p>
+      <h2>File Structure & Data Modeling</h2>
+      <p>
+        The project is split across four <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">.cpp</code> files and a single shared common header. All inventory data lives in a single <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">Inventory</code> struct, and the two menu option sets are modeled as <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">enum</code> types so switch statements read as named cases rather than magic numbers.
+      </p>
+      <div class="code-block">
+        <div class="code-common">
+          <span class="code-filename">common.hpp</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre><span class="cm">// Shared types and constants</span>
+
+<span class="kw">inline</span> <span class="kw">const</span> <span class="tp">int</span> MAX_LIMIT { <span class="num">100</span> };
+
+<span class="kw">struct</span> Inventory {
+  <span class="tp">float</span> platinum{}, gold{}, diamond{}, silver{}, copper{};
+};
+
+<span class="kw">enum</span> Metals    { EXIT, PLATINUM, GOLD, DIAMOND, SILVER, COPPER, BALANCE };
+<span class="kw">enum</span> Operation { QUIT, DEPOSIT, WITHDRAW, MAIN_MENU };</pre>
+      </div>
+      <p>
+        Passing the <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">Inventory</code> struct by reference into display and transaction functions means there is one authoritative copy of the data at all times, no globals, no duplication.
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- KEY FEATURES -->
+    <div class="section-block">
+      <p class="section-label">02 — Key Features</p>
+      <h2>Menu Navigation, Validation & Routing</h2>
+
+      <h3>Two-Level Menu Navigation</h3>
+      <p>
+        The outer menu selects a metal; the inner menu handles the operation. Each metal routes to the same <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">manageInventory()</code> function, passing only the relevant float field by reference, no duplication across five nearly-identical branches.
+      </p>
+      <div class="code-block">
+        <div class="code-common">
+          <span class="code-filename">main.cpp</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre><span class="cm">// Routing each metal to the same handler via reference</span>
+<span class="kw">switch</span> (metalChoice) {
+  <span class="kw">case</span> PLATINUM: <span class="fn">manageInventory</span>(storage.platinum, <span class="str">"platinum"</span>); <span class="kw">break</span>;
+  <span class="kw">case</span> GOLD:     <span class="fn">manageInventory</span>(storage.gold, <span class="str">"gold"</span>);         <span class="kw">break</span>;
+  <span class="kw">case</span> DIAMOND:  <span class="fn">manageInventory</span>(storage.diamond, <span class="str">"diamond"</span>);   <span class="kw">break</span>;
+  <span class="kw">case</span> SILVER:   <span class="fn">manageInventory</span>(storage.silver, <span class="str">"silver"</span>);     <span class="kw">break</span>;
+  <span class="kw">case</span> COPPER:   <span class="fn">manageInventory</span>(storage.copper, <span class="str">"copper"</span>);     <span class="kw">break</span>;
+  <span class="kw">case</span> BALANCE:  <span class="fn">displayTotalBalance</span>(storage);                  <span class="kw">break</span>;
+  <span class="kw">case</span> EXIT:
+    cout &lt;&lt; <span class="str">"\nThank you for using our services!\n"</span>;
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+      </div>
+
+      <h3>Input Validation</h3>
+      <p>
+        Every <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">cin</code> call is guarded: if the stream enters a fail state, the error is cleared and the bad input is discarded before prompting again. Numeric range is validated separately in <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">validate.cpp</code>.
+      </p>
+      <div class="code-block">
+        <div class="code-common">
+          <span class="code-filename">perform_transaction.cpp</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre>cin >> depoAmt;
+
+<span class="kw">if</span> (cin.<span class="fn">fail</span>()) {
+  cin.<span class="fn">clear</span>();
+  cin.<span class="fn">ignore</span>(<span class="num">1000</span>, <span class="str">'\n'</span>);
+  cout &lt;&lt; <span class="str">"\nInvalid input. Please enter a number.\n"</span>;
+} <span class="kw">else</span> {
+  <span class="kw">if</span> (<span class="fn">isValidDeposit</span>(depoAmt, metalChoice)) {
+    metalChoice += depoAmt;
+    cout &lt;&lt; <span class="str">"\nNew Balance: "</span> &lt;&lt; metalChoice &lt;&lt; <span class="str">"kg\n"</span>;
+  } <span class="kw">else</span> {
+    cout &lt;&lt; <span class="str">"Invalid deposit amount!\n"</span>;
+  }
+}</pre>
+      </div>
+
+      <h3>Separated Validation Logic</h3>
+      <p>
+        Deposit and withdrawal rules live in their own functions in <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">validate.cpp</code>. Both return a boolean and take only the amount and current balance as arguments, making them independently testable with no side effects.
+      </p>
+      <div class="code-block">
+        <div class="code-common">
+          <span class="code-filename">validate.cpp</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre><span class="tp">bool</span> <span class="fn">isValidDeposit</span>(<span class="tp">float</span> depoAmt, <span class="tp">float</span> currentBalance) {
+  <span class="kw">return</span> (depoAmt > <span class="num">0</span>) &amp;&amp; ((depoAmt + currentBalance) &lt;= MAX_LIMIT);
+}
+
+<span class="tp">bool</span> <span class="fn">isValidWithdrawal</span>(<span class="tp">float</span> withdrawAmt, <span class="tp">float</span> currentBalance) {
+  <span class="kw">return</span> (withdrawAmt > <span class="num">0</span>) &amp;&amp; (withdrawAmt &lt;= currentBalance);
+}</pre>
+      </div>
+      <h3>Qt GUI Port</h3>
+      <p>
+        The same struct and validation logic from the CLI version drives a Qt6 desktop GUI, built with a <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">QStackedWidget</code> swapping between a main menu page and a shared transaction page. Buttons replace the numbered menu, and a <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">QLineEdit</code> with placeholder text and a numeric validator replaces <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">cin</code>, rejecting bad characters before they're even typed.
+      </p>
+      <div class="code-block">
+        <div class="code-common">
+          <span class="code-filename">display.cpp</span>
+          <span class="code-lang">C++</span>
+        </div>
+        <pre>amountLineEdit = <span class="kw">new</span> QLineEdit;
+amountLineEdit-&gt;<span class="fn">setPlaceholderText</span>(<span class="str">"0.00"</span>);
+
+QDoubleValidator *amountValidator =
+    <span class="kw">new</span> QDoubleValidator(<span class="num">0.0</span>, <span class="num">9999.99</span>, <span class="num">2</span>, amountLineEdit);
+amountLineEdit-&gt;<span class="fn">setValidator</span>(amountValidator);</pre>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- REFLECTION -->
+    <div class="section-block">
+      <p class="section-label">03 — Reflection</p>
+      <h2>What I Learned</h2>
+      <p>
+        The biggest takeaway was how much clarity you get from splitting a program into focused files early, even in a small project. Having <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">validate.cpp</code> contain nothing but two pure functions made it trivial to audit the correctness of the deposit and withdrawal logic in isolation.
+      </p>
+      <p>
+        I also reinforced the pattern of guarding every <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">cin</code> read with a fail-state check. It is easy to skip when prototyping, but user input is unpredictable and a single unguarded read can put the stream into a broken state that silently corrupts subsequent reads.
+      </p>
+      <p>
+        If I were to extend this, I would add file persistence so balances survive between sessions, and replace the raw <code style="font-family:var(--mono);font-size:0.85em;color:var(--accent);">float</code> fields with a map from a metal enum to balance, making it easier to add new metals without touching the struct or the switch statement. Porting to Qt also made it obvious how much of "the program" was really just I/O dressed up as logic, since the actual validation rules carried over completely unchanged.
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- SOURCE -->
+    <div class="section-block">
+      <p class="section-label">Source</p>
+      <h2>View on GitHub</h2>
+      <a href="https://github.com/rjafari44/Inventory-Management-System" target="_blank" style="display:inline-flex;align-items:center;gap:0.6rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink);text-decoration:none;border:1px solid var(--border);padding:0.75rem 1.25rem;border-radius:3px;transition:border-color 0.2s,color 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 0 1 3.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.652.242 2.873.118 3.176.77.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/rjafari44/Inventory-Management-System
+      </a>
+    </div>
+
+  </div><!-- /project-body -->
+  <section class="back-to-portfolio">
+    <a class="btn-home" href="../../index.html#projects">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to All Projects
+    </a>
+  </section>
+
+
+
+  <footer id="page-bottom">© 2026 Radin Jafari</footer>
+
+
+  <a href="#page-bottom" class="scroll-down" id="scrollDown" aria-label="Scroll to bottom">
+    <span>Scroll</span>
+    <span class="scroll-down-ring">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </span>
+  </a>
+
+  <a href="#top" class="back-to-top" id="backToTop" aria-label="Back to top">
+    <span class="back-to-top-ring">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </span>
+    <span>Top</span>
+  </a>
+
+  <script>
+    (function () {
+      var topBtn = document.getElementById('backToTop');
+      var downBtn = document.getElementById('scrollDown');
+      function update() {
+        var nearBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 40);
+
+        if (nearBottom) {
+          topBtn.classList.add('is-visible');
+        } else {
+          topBtn.classList.remove('is-visible');
+        }
+
+        if (window.scrollY > 40) {
+          downBtn.classList.add('is-hidden');
+        } else {
+          downBtn.classList.remove('is-hidden');
+        }
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
+  </script>
+</body>
+</html>

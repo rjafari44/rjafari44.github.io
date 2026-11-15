@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>555 Timer Astable PCB — Radin Jafari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <script>
+    /* THEME — picks the saved choice (or the system setting) before the page draws, and handles the nav toggle */
+    (function () {
+      var root = document.documentElement, saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (e) {}
+      var media = window.matchMedia('(prefers-color-scheme: dark)');
+      function apply(theme) { root.setAttribute('data-theme', theme); }
+      apply(saved === 'light' || saved === 'dark' ? saved : (media.matches ? 'dark' : 'light'));
+      media.addEventListener('change', function (e) { if (!saved) apply(e.matches ? 'dark' : 'light'); });
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('#themeToggle')) return;
+        saved = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        apply(saved);
+        try { localStorage.setItem('theme', saved); } catch (e) {}
+      });
+    })();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface-2: #f0efe9;
+      --ink: #1c1b18;
+      --ink-2: #5c5a55;
+      --ink-3: #a8a6a0;
+      --accent: #b07d2a;
+      --accent-dim: rgba(176,125,42,0.08);
+      --border: #e0deda;
+      --mono: 'DM Mono', monospace;
+      --serif: 'DM Serif Display', serif;
+      --sans: 'DM Sans', sans-serif;
+      --max: 1040px;
+      --code-bg: #1a1917;
+      --code-ink: #d4d0c8;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 3rem;
+      background: rgba(247,246,242,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      font-family: var(--mono); font-size: 0.9rem;
+      font-weight: 500; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--ink); text-decoration: none;
+    }
+    .nav-back {
+      font-family: var(--mono); font-size: 0.9rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-2); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--accent); }
+
+    /* ---- HERO ---- */
+    .project-hero {
+      padding: 10rem 3rem 3rem;
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .project-category-label {
+      font-family: var(--mono); font-size: 0.68rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .project-category-label::before {
+      content: ''; display: inline-block;
+      width: 20px; height: 2px; background: var(--accent);
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 400; line-height: 1.08; margin-bottom: 1.5rem;
+    }
+    .project-meta {
+      display: flex; flex-wrap: wrap; gap: 2rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .meta-item label {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--ink-3); display: block; margin-bottom: 0.2rem;
+    }
+    .meta-item span { font-size: 0.88rem; color: var(--ink); }
+
+    /* ---- BODY ---- */
+    .project-body {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 3rem 6rem;
+    }
+
+    .section-label {
+      font-family: var(--mono); font-size: 0.62rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-label::before {
+      content: ''; display: inline-block;
+      width: 14px; height: 1px; background: var(--accent);
+    }
+    h2 {
+      font-family: var(--serif); font-size: 1.65rem;
+      font-weight: 400; margin-bottom: 1rem; margin-top: 0;
+    }
+    h3 {
+      font-family: var(--mono); font-size: 0.78rem;
+      font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink);
+      margin: 2rem 0 0.75rem;
+    }
+    p {
+      font-size: 0.95rem; color: var(--ink-2);
+      margin-bottom: 1.2rem; line-height: 1.78;
+    }
+    ul {
+      list-style: none; display: flex;
+      flex-direction: column; gap: 0.45rem;
+      margin-bottom: 1.5rem;
+    }
+    ul li {
+      font-size: 0.92rem; color: var(--ink-2);
+      padding-left: 1.4rem; position: relative; line-height: 1.65;
+    }
+    ul li::before {
+      content: '—'; position: absolute; left: 0;
+      color: var(--ink-3); font-size: 0.75rem; top: 0.1rem;
+    }
+
+    /* ---- TAGS ---- */
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+    .tag {
+      font-family: var(--mono); font-size: 0.69rem;
+      letter-spacing: 0.08em; padding: 0.32rem 0.8rem;
+      border: 1px solid var(--border); color: var(--ink-2);
+      border-radius: 2px;
+    }
+
+    /* ---- SECTION DIVIDER ---- */
+    .section-block { margin-top: 3.5rem; }
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ---- TABLE ---- */
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0 2rem; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.85rem; font-family: var(--mono);
+    }
+    thead tr { border-bottom: 2px solid var(--ink); }
+    thead th {
+      text-align: left; padding: 0.5rem 0.75rem;
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-2); font-weight: 500;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 0.55rem 0.75rem; color: var(--ink-2); }
+    tbody td:first-child { color: var(--ink); font-weight: 500; }
+
+    /* ---- CODE BLOCKS ---- */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: 6px;
+      margin: 1.5rem 0 2rem;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .code-filename {
+      font-family: var(--mono); font-size: 0.68rem;
+      color: rgba(255,255,255,0.45); letter-spacing: 0.08em;
+    }
+    .code-lang {
+      font-family: var(--mono); font-size: 0.62rem;
+      color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .code-block pre {
+      font-family: var(--mono); font-size: 0.8rem; line-height: 1.6;
+      color: var(--code-ink); padding: 1.2rem 1rem; overflow-x: auto;
+      margin: 0;
+    }
+
+    /* ---- PLACEHOLDER ---- */
+    .placeholder-banner {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 1.5rem 1.75rem;
+      border-radius: 3px;
+      margin: 2rem 0;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--ink-3);
+      letter-spacing: 0.05em;
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      text-align: center; padding: 2.5rem 3rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.68rem;
+      color: var(--ink-3); letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 760px) {
+      nav { padding: 1rem 1.5rem; }
+      .project-hero, .project-body { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+  
+    /* BACK TO PORTFOLIO */
+    .back-to-portfolio {
+      text-align: center;
+      padding: 2.4rem 3rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.55rem 1.2rem;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .btn-home:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .btn-home svg { transition: transform 0.2s; }
+    .btn-home:hover svg { transform: translateX(-3px); }
+
+    /* BACK TO TOP (floating) — matches the front page's scroll indicator exactly */
+    .back-to-top {
+      position: fixed;
+      right: 2.4rem;
+      bottom: 2.8rem;
+      width: 4rem; /* same width for Scroll and Top so the rings line up */
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--ink-2);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0;
+      text-decoration: none;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .back-to-top.is-visible {
+      opacity: 0.9;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .back-to-top:hover {
+      opacity: 1;
+    }
+    .back-to-top:hover .back-to-top-ring {
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    .back-to-top-ring {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      animation: backToTopBounce 2s ease-in-out infinite;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    @keyframes backToTopBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* SCROLL DOWN (floating, clickable — jumps to bottom of page) */
+    .scroll-down {
+      position: fixed;
+      right: 2.4rem;
+      bottom: 2.8rem;
+      width: 4rem; /* same width for Scroll and Top so the rings line up */
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--ink-2);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .scroll-down.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+    }
+    .scroll-down:hover {
+      opacity: 1;
+    }
+    .scroll-down:hover .scroll-down-ring {
+      border-color: var(--accent);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    .scroll-down-ring {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      animation: backToTopBounce 2s ease-in-out infinite;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    /* THEME TOGGLE (nav) */
+    .nav-back { margin-left: auto; }
+    .theme-toggle {
+      display: flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; padding: 0; margin-left: 1.6rem;
+      background: none; border: none; cursor: pointer;
+      color: var(--ink-2); transition: color 0.2s;
+    }
+    .theme-toggle:hover { color: var(--accent); }
+    .theme-toggle .icon-sun { display: none; }
+    :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+    /* DARK THEME — switched on by the theme script in <head> */
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg:         #161513;
+      --surface:    #1e1d1a;
+      --surface-2:  #26241f;
+      --ink:        #ece9e2;
+      --ink-2:      #b3afa6;
+      --ink-3:      #7f7b73;
+      --accent:     #d6a64e;
+      --accent-dim: rgba(214,166,78,0.14);
+      --border:     #34322d;
+      --code-bg:   #201f1c;
+    }
+    :root[data-theme="dark"] nav { background: rgba(22,21,19,0.92); }
+  </style>
+</head>
+<body id="top">
+
+  <nav>
+    <a class="nav-brand" href="../../index.html">Radin Jafari</a>
+    <a class="nav-back" href="../../index.html#projects">← Back to Projects</a>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch between light and dark theme">
+      <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+  </nav>
+
+  <!-- ======== HERO ======== -->
+  <div class="project-hero">
+    <p class="project-category-label">PCB Design · Analog Electronics</p>
+    <h1>555 Timer Astable Board</h1>
+    <div class="project-meta">
+      <div class="meta-item"><label>Platform</label><span>None</span></div>
+      <div class="meta-item"><label>Type</label><span>NE555</span></div>
+      <div class="meta-item"><label>Tool</label><span>KiCad</span></div>
+      <div class="meta-item"><label>Scope</label><span>Solo Under IEEE at UC Irvine</span></div>
+    </div>
+  </div>
+
+  <!-- ======== BODY ======== -->
+  <div class="project-body">
+
+    <div class="tag-row">
+      <span class="tag">KiCad</span>
+      <span class="tag">555 Timer</span>
+      <span class="tag">Astable Mode</span>
+      <span class="tag">PCB Layout</span>
+      <span class="tag">LTspice</span>
+      <span class="tag">Analog Electronics</span>
+      <span class="tag">IEEE</span>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="section-block" style="margin-top:1.5rem;">
+      <p class="section-label">Overview</p>
+      <h2>A classic timer circuit on custom PCB</h2>
+      <p>
+        This PCB is a simple 555 timer circuit configured in astable mode, designed to blink an LED. It is powered by a 9V battery and includes a single LED with a current-limiting resistor.
+      </p>
+      <p>
+        This was a project done under IEEE at UC Irvine. The PCB was designed using KiCad. An LTspice simulation file is included for testing and verification.
+      </p>
+    </div>
+
+    <!-- BOARD RENDER -->
+    <img src="../../assets/555-timer/555-pcb-render.png" alt="555 Timer PCB 3D Render" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+
+    <hr class="divider">
+
+    <!-- FEATURES -->
+    <div class="section-block">
+      <p class="section-label">01 — Features</p>
+      <h2>Board Capabilities</h2>
+      <ul>
+        <li>NE555 timer in astable mode, blinking an LED at about 1.54 Hz with a ~50% duty cycle</li>
+        <li>Powered by a single 9V battery</li>
+        <li>Indicator LED with a 1kΩ current-limiting resistor</li>
+        <li>Adjustable timing: change R2, R3, or C to set the frequency and duty cycle</li>
+        <li>Designed in KiCad, with an included LTspice simulation file for verification</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- COMPONENTS -->
+    <div class="section-block">
+      <p class="section-label">02 — Components</p>
+      <h2>Bill of Materials</h2>
+      
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Value</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>U1</td><td>NE555</td><td>Timer IC</td></tr>
+            <tr><td>C1</td><td>1µF</td><td>Timing capacitor (TRIG/THRES to GND)</td></tr>
+            <tr><td>R1</td><td>1kΩ</td><td>LED current-limiting resistor</td></tr>
+            <tr><td>R2</td><td>470kΩ</td><td>Discharge to TRIG/THRES timing resistor</td></tr>
+            <tr><td>R3</td><td>1kΩ</td><td>Discharge to VCC timing resistor</td></tr>
+            <tr><td>LED</td><td>—</td><td>Indicator LED</td></tr>
+            <tr><td>BAT</td><td>9V</td><td>Battery power supply</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- WIRING -->
+    <div class="section-block">
+      <p class="section-label">03 — Wiring & Connections</p>
+      <h2>Pin Assignments</h2>
+      
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pin</th>
+              <th>Connection</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>VCC</td><td>Positive battery terminal (+9V)</td></tr>
+            <tr><td>GND</td><td>Negative battery terminal</td></tr>
+            <tr><td>DISCH</td><td>Connected through R3 (1kΩ) to VCC node</td></tr>
+            <tr><td>TRIG</td><td>Connected to R2 (470kΩ) from DISCH and 1µF capacitor to GND</td></tr>
+            <tr><td>THRES</td><td>Connected to TRIG and 1µF capacitor to GND</td></tr>
+            <tr><td>OUT</td><td>LED in series with R1 (1kΩ) to GND</td></tr>
+            <tr><td>RESET</td><td>Tied to VCC node (battery positive)</td></tr>
+            <tr><td>CV</td><td>Disconnected</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-size:0.85rem;color:var(--ink-3);font-style:italic;">
+        Note: The battery connector is where you connect the 9V battery; observe LED polarity.
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- USAGE -->
+    <div class="section-block">
+      <p class="section-label">04 — Usage</p>
+      <h2>Operating Instructions</h2>
+      
+      <ul>
+        <li>Connect a 9V battery to the PCB</li>
+        <li>The 555 timer begins oscillating in astable mode</li>
+        <li>The LED will blink according to the calculated frequency</li>
+        <li>You can simulate the circuit using the included LTspice file to verify timing and LED behavior</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- CALCULATIONS -->
+    <div class="section-block">
+      <p class="section-label">05 — Timing Calculations</p>
+      <h2>Frequency & Duty Cycle</h2>
+      
+      <p>
+        For a 555 timer in astable mode:
+      </p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">Astable Equations</span>
+          <span class="code-lang">Formula</span>
+        </div>
+        <pre>T_high = 0.693 × (R2 + R3) × C
+T_low  = 0.693 × R2 × C
+T_total = T_high + T_low = 0.693 × (R3 + 2×R2) × C
+f = 1 / T_total
+Duty cycle = T_high / T_total</pre>
+      </div>
+
+      <h3>Using Component Values</h3>
+      <p>
+        R2 = 470kΩ, R3 = 1kΩ, C = 1µF
+      </p>
+
+      <h3>Step 1: Total Period</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">Period Calculation</span>
+          <span class="code-lang">Math</span>
+        </div>
+        <pre>T_total = 0.693 × (R3 + 2×R2) × C
+T_total = 0.693 × (1,000 + 2×470,000) × 0.000001
+T_total ≈ 0.651 seconds</pre>
+      </div>
+
+      <h3>Step 2: Frequency</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">Frequency Calculation</span>
+          <span class="code-lang">Math</span>
+        </div>
+        <pre>f = 1 / T_total ≈ 1 / 0.651 ≈ 1.54 Hz</pre>
+      </div>
+
+      <h3>Step 3: Duty Cycle</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-filename">Duty Cycle Calculation</span>
+          <span class="code-lang">Math</span>
+        </div>
+        <pre>T_high = 0.693 × (R2 + R3) × C
+T_high = 0.693 × (470,000 + 1,000) × 0.000001 ≈ 0.326 s
+Duty cycle ≈ T_high / T_total ≈ 0.326 / 0.651 ≈ 50%</pre>
+      </div>
+
+      <p style="font-size:0.85rem;color:var(--ink-3);font-style:italic;">
+        Note: R1 (LED resistor) does not affect timing.
+      </p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- SIMULATION -->
+    <div class="section-block">
+      <p class="section-label">06 — Simulation</p>
+      <h2>LTspice Verification</h2>
+      
+      <ul>
+        <li>You can simulate the circuit using the included LTspice file</li>
+        <li>The OUT pin waveform will correspond to the LED blink pattern</li>
+        <li>Adjust R2, R3, or C to change the frequency and duty cycle as needed</li>
+      </ul>
+    </div>
+
+    <hr class="divider">
+
+    <!-- IMAGES -->
+    <div class="section-block">
+      <p class="section-label">07 — Design Files</p>
+      <h2>Schematics & Layouts</h2>
+      
+      <h3 style="margin-top:2.5rem;">Schematic</h3>
+      <img src="../../assets/555-timer/555-schematic.png" alt="555 Timer Schematic" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+      <br>
+
+      <h3 style="margin-top:2.5rem;">Layout</h3>
+      <img src="../../assets/555-timer/555-pcb-layout.png" alt="555 Timer PCB Layout" style="width:100%;border-radius:3px;margin:1.5rem 0;display:block;" />
+    </div>
+
+    <hr class="divider">
+
+    <!-- SOURCE -->
+    <div class="section-block">
+      <p class="section-label">Source</p>
+      <h2>View on GitHub</h2>
+      <a href="https://github.com/rjafari44/555-Timer-PCB" target="_blank" style="display:inline-flex;align-items:center;gap:0.6rem;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;color:var(--ink);text-decoration:none;border:1px solid var(--border);padding:0.75rem 1.25rem;border-radius:3px;transition:border-color 0.2s,color 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.235-3.22-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 0 1 3.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.652.242 2.873.118 3.176.77.84 1.233 1.91 1.233 3.22 0 4.61-2.804 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        github.com/rjafari44/555-Timer-PCB
+      </a>
+    </div>
+
+  </div><!-- /project-body -->
+  <section class="back-to-portfolio">
+    <a class="btn-home" href="../../index.html#projects">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to All Projects
+    </a>
+  </section>
+
+
+
+  <footer id="page-bottom">© 2026 Radin Jafari</footer>
+
+
+  <a href="#page-bottom" class="scroll-down" id="scrollDown" aria-label="Scroll to bottom">
+    <span>Scroll</span>
+    <span class="scroll-down-ring">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </span>
+  </a>
+
+  <a href="#top" class="back-to-top" id="backToTop" aria-label="Back to top">
+    <span class="back-to-top-ring">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </span>
+    <span>Top</span>
+  </a>
+
+  <script>
+    (function () {
+      var topBtn = document.getElementById('backToTop');
+      var downBtn = document.getElementById('scrollDown');
+      function update() {
+        var nearBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 40);
+
+        if (nearBottom) {
+          topBtn.classList.add('is-visible');
+        } else {
+          topBtn.classList.remove('is-visible');
+        }
+
+        if (window.scrollY > 40) {
+          downBtn.classList.add('is-hidden');
+        } else {
+          downBtn.classList.remove('is-hidden');
+        }
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
+  </script>
+</body>
+</html>
