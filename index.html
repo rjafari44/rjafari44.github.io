@@ -243,6 +243,9 @@
       color: var(--ink-2);
       border-radius: 2px;
     }
+    a.tag { text-decoration: none; transition: background 0.2s; }
+    a.tag:hover { background: var(--surface); }
+    .project-category { scroll-margin-top: 90px; } /* keeps the category label clear of the fixed nav when a hero tag jumps here */
     .tag.accent { border-color: var(--accent); color: var(--accent); }
     .tag.blue   { border-color: var(--blue);   color: var(--blue); }
     .tag.green  { border-color: var(--green);  color: var(--green);}
@@ -1229,10 +1232,10 @@
     <h1 class="hero-name">Radin <em>Jafari</em></h1>
     <p class="hero-label">Electrical Engineering · UC Irvine</p>
     <div class="hero-tags">
-      <span class="tag accent">Robotics</span>
-      <span class="tag blue">RF</span>
-      <span class="tag green">Software</span>
-      <span class="tag gold">PCB Design</span>
+      <a class="tag accent" href="#robotics">Robotics</a>
+      <a class="tag blue" href="#rf">RF</a>
+      <a class="tag green" href="#software">Software</a>
+      <a class="tag gold" href="#pcb-design">PCB Design</a>
     </div>
     </div>
   </div>
@@ -1299,7 +1302,7 @@
     </div>
 
     <!-- ROBOTICS -->
-    <div class="project-category cat-robotics">
+    <div class="project-category cat-robotics" id="robotics">
       <p class="category-label">Robotics</p>
       <div class="project-grid">
 
@@ -1364,7 +1367,7 @@
     </div>
 
     <!-- RF -->
-    <div class="project-category cat-radio">
+    <div class="project-category cat-radio" id="rf">
       <p class="category-label">RF</p>
       <div class="project-grid">
 
@@ -1392,7 +1395,7 @@
     </div>
 
     <!-- SOFTWARE -->
-    <div class="project-category cat-software">
+    <div class="project-category cat-software" id="software">
       <p class="category-label">Software</p>
       <div class="project-grid">
 
@@ -1457,7 +1460,7 @@
     </div>
 
     <!-- PCB DESIGN -->
-    <div class="project-category cat-pcb">
+    <div class="project-category cat-pcb" id="pcb-design">
       <p class="category-label">PCB Design</p>
       <div class="project-grid">
 
